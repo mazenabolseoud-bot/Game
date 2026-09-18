@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>قضية الفيلا الصامتة — الملف الثاني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rakkas&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#1b2418;
+    --board-dark:#10160d;
+    --paper:#EFE6D0;
+    --paper-edge:#DFCFA0;
+    --paper-dark:#E2D6B6;
+    --ink:#241F1A;
+    --ink-soft:#5B4E3E;
+    --stamp:#9E2B25;
+    --gold:#AD8A4E;
+    --success:#3E6B41;
+    --warn:#8a6d1a;
+    --line:rgba(36,31,26,.18);
+    --crit:#7a2b25;
+    --part:#8a6d1a;
+    --rh:#4a5d3a;
+    --contra:#5a3a7a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,.03), transparent 40%),
+      repeating-linear-gradient(45deg, rgba(0,0,0,.025) 0 2px, transparent 2px 6px),
+      var(--board);
+    min-height:100vh;
+    font-family:'Cairo',sans-serif;
+    color:var(--ink);
+    padding:22px 12px 70px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  .masthead{text-align:center;margin-bottom:16px;color:var(--paper);}
+  .masthead .kicker{font-size:12px;letter-spacing:.12em;color:var(--gold);margin-bottom:6px;}
+  .masthead h1{font-family:'Rakkas',serif;font-size:32px;margin:0;line-height:1.25;color:var(--paper);text-shadow:0 2px 0 rgba(0,0,0,.35);}
+  .folder{background:var(--paper);border-radius:6px 6px 14px 14px;box-shadow:0 18px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(0,0,0,.05);position:relative;overflow:hidden;background-image:radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px);background-size:6px 6px;}
+  .folder-tab{background:var(--stamp);color:var(--paper);display:inline-block;font-family:'Rakkas',serif;font-size:14px;padding:6px 18px;border-radius:0 0 8px 8px;margin-inline-start:24px;letter-spacing:.03em;}
+  .folder-body{padding:18px 16px 24px;}
+
+  .statusbar{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 12px;font-size:13px;background:var(--paper);padding:8px 2px;}
+  .team-pill{background:rgba(0,0,0,.08);border:1px solid var(--line);padding:6px 12px;border-radius:20px;font-weight:700;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:38%;}
+  .score-pill{background:var(--gold);color:var(--board-dark);padding:6px 12px;border-radius:20px;font-weight:800;font-size:13px;}
+  .clock-pill{background:rgba(0,0,0,.08);border:1px solid var(--line);padding:6px 10px;border-radius:20px;font-size:11.5px;color:var(--ink-soft);}
+
+  .tabs{display:flex;gap:5px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tabs button{flex:0 0 auto;border:none;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;font-size:12px;padding:8px 11px;border-radius:8px 8px 0 0;background:rgba(0,0,0,.08);color:var(--ink-soft);opacity:.75;}
+  .tabs button.active{background:var(--ink);color:var(--paper);opacity:1;}
+  .tabs button .lock{font-size:10px;}
+
+  h2.stage-title{font-family:'Rakkas',serif;color:var(--stamp);font-size:23px;margin:0 0 4px;}
+  .stage-sub{color:var(--ink-soft);font-size:13px;margin-bottom:12px;}
+  .storybox{background:var(--paper-dark);border-inline-start:4px solid var(--stamp);padding:13px 15px;border-radius:4px;font-size:14.5px;line-height:1.85;margin-bottom:14px;}
+  .cluebox{background:#fff9ec;border:1px dashed var(--gold);padding:13px 15px;border-radius:4px;font-size:14.5px;line-height:1.9;margin-bottom:12px;white-space:pre-line;}
+  .code-seq{font-family:'Cairo',sans-serif;font-weight:800;font-size:17px;letter-spacing:.03em;direction:ltr;text-align:center;background:var(--ink);color:#f2e9d0;padding:11px;border-radius:6px;margin:10px 0;}
+  .legend{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:11px;background:rgba(0,0,0,.04);padding:8px;border-radius:6px;margin-bottom:12px;text-align:center;}
+  .legend div span{display:block;color:var(--ink-soft);font-size:9.5px;}
+
+  label.field-label{display:block;font-weight:700;font-size:13px;margin:10px 0 5px;}
+  select, input[type=text], textarea{width:100%;padding:10px 11px;font-family:'Cairo',sans-serif;font-size:14.5px;border-radius:6px;border:1px solid var(--line);background:#fffefb;color:var(--ink);}
+  textarea{resize:vertical;min-height:90px;line-height:1.7;}
+  .choice-grid{display:grid;gap:7px;margin:6px 0 4px;}
+  .choice-btn{text-align:right;padding:11px 13px;border-radius:6px;border:1px solid var(--line);background:#fffefb;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer;}
+  .choice-btn:hover{background:#fbf3dd;}
+  .choice-btn.selected{border-color:var(--stamp);background:#fbeee8;}
+  .check-row{display:flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid var(--line);border-radius:6px;background:#fffefb;margin-bottom:6px;font-size:13.5px;cursor:pointer;}
+  .check-row input{width:auto;}
+  .frag-btn{display:inline-block;margin:3px;padding:8px 12px;border-radius:16px;border:1px solid var(--gold);background:#fffefb;font-size:14px;cursor:pointer;}
+  .frag-btn.used{opacity:.35;pointer-events:none;}
+  .frag-line{min-height:42px;background:var(--ink);color:#f2e9d0;border-radius:6px;padding:9px 12px;font-size:15px;direction:rtl;margin:8px 0;}
+
+  .btn{display:inline-block;background:var(--stamp);color:#fff8ec;border:none;padding:11px 20px;border-radius:6px;font-family:'Cairo',sans-serif;font-weight:800;font-size:14px;cursor:pointer;margin-top:6px;}
+  .btn.secondary{background:var(--ink);}
+  .btn.ghost{background:transparent;color:var(--stamp);border:1.5px solid var(--stamp);}
+  .btn.small{padding:7px 12px;font-size:12.5px;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+
+  .feedback{margin-top:10px;font-weight:700;font-size:13.5px;padding:10px 12px;border-radius:6px;}
+  .feedback.ok{background:#e7f2e5;color:var(--success);}
+  .feedback.bad{background:#f7e2df;color:var(--stamp);}
+  .feedback.info{background:#eef1fb;color:#33447a;}
+
+  .suspect-card{background:#fffefb;border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:8px;font-size:13.5px;line-height:1.8;}
+  .suspect-card b{color:var(--ink);}
+
+  details.organizer{margin-top:20px;background:rgba(0,0,0,.05);border-radius:8px;padding:4px 14px;font-size:13px;}
+  details.organizer summary{cursor:pointer;padding:9px 0;font-weight:700;color:var(--stamp);}
+  details.organizer p, details.organizer li{line-height:1.85;}
+
+  .puzzle-card{background:#fffefb;border:1px solid var(--line);border-radius:8px;padding:14px 14px 12px;margin-bottom:14px;}
+  .puzzle-card.locked{opacity:.55;}
+  .ptag{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:10px;color:#fff;margin-inline-end:6px;}
+  .hintbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+  .hint-btn{font-size:11.5px;background:transparent;border:1px dashed var(--ink-soft);color:var(--ink-soft);padding:5px 9px;border-radius:14px;cursor:pointer;}
+  .hint-text{background:#fff3d8;border-radius:6px;padding:8px 10px;font-size:12.5px;margin-top:6px;line-height:1.7;}
+
+  .ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  @media (max-width:520px){.ev-grid{grid-template-columns:1fr;}}
+  .ev-card{background:#fffefb;border:1px solid var(--line);border-radius:8px;padding:11px 12px;cursor:pointer;position:relative;}
+  .ev-card:hover{background:#fbf6e9;}
+  .ev-cat{font-size:10.5px;color:var(--gold);font-weight:800;}
+  .ev-title{font-weight:800;font-size:14px;margin:2px 0 4px;}
+  .ev-snip{font-size:12px;color:var(--ink-soft);line-height:1.6;max-height:38px;overflow:hidden;}
+  .ev-status{position:absolute;top:8px;left:8px;font-size:9.5px;padding:2px 7px;border-radius:10px;background:#eee;color:#555;}
+  .ev-status.important{background:#f7e2df;color:var(--stamp);}
+  .ev-status.uncertain{background:#fff3d8;color:var(--warn);}
+  .ev-status.redf{background:#e4e9de;color:var(--rh);}
+  .ev-status.connected{background:#e7f2e5;color:var(--success);}
+  .locked-card{background:rgba(0,0,0,.04);border:1px dashed var(--line);border-radius:8px;padding:14px;text-align:center;color:var(--ink-soft);font-size:13px;}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:flex;align-items:flex-start;justify-content:center;padding:16px;z-index:200;overflow:auto;}
+  .modal{background:var(--paper);border-radius:10px;max-width:520px;width:100%;padding:18px 16px 20px;box-shadow:0 20px 50px rgba(0,0,0,.5);margin:20px 0;}
+  .modal h3{font-family:'Rakkas',serif;color:var(--stamp);font-size:20px;margin:0 0 6px;}
+  .modal .close-x{float:left;background:none;border:none;font-size:20px;cursor:pointer;color:var(--ink-soft);}
+  .modal .modal-body{white-space:pre-line;line-height:1.85;font-size:14.5px;background:#fffefb;border:1px solid var(--line);border-radius:6px;padding:12px;margin:8px 0 12px;}
+  .tagform{background:rgba(0,0,0,.04);border-radius:6px;padding:10px;margin-top:8px;}
+  .tagform label{font-size:12px;font-weight:700;display:block;margin:6px 0 3px;}
+  .chip{display:inline-block;background:var(--ink);color:#fff8ec;font-size:11px;padding:3px 9px;border-radius:12px;margin:3px 4px 0 0;}
+
+  .board-suspect{background:#fffefb;border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-bottom:9px;}
+  .board-suspect b{font-size:14.5px;}
+  .board-suspect .links{font-size:12px;color:var(--ink-soft);margin-top:5px;line-height:1.7;}
+  .board-check{background:var(--ink);color:var(--paper);border-radius:8px;padding:14px;margin:14px 0;font-size:13px;line-height:1.8;}
+
+  .tl-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .tl-time{flex:0 0 78px;font-weight:800;font-size:12.5px;background:var(--ink);color:#f2e9d0;padding:6px 5px;border-radius:6px;text-align:center;}
+  .tl-row select{flex:1;font-size:12.5px;padding:8px;}
+
+  .final-field{background:#fffefb;border:1px solid var(--line);border-radius:8px;padding:12px 13px;margin-bottom:11px;}
+  .final-result{text-align:center;padding:14px 6px;}
+  .debrief{text-align:right;}
+  .debrief h4{color:var(--stamp);font-family:'Rakkas',serif;font-size:18px;margin:18px 0 6px;}
+  .debrief .te-row{display:flex;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px;}
+  .debrief .te-time{flex:0 0 80px;font-weight:800;color:var(--gold);}
+  .debrief .rh-item{background:#fdf3f2;border-radius:6px;padding:9px 11px;margin-bottom:7px;font-size:13.5px;line-height:1.75;}
+
+  .lb-btn{position:fixed;top:12px;inset-inline-end:12px;background:var(--gold);color:var(--board-dark);border:none;border-radius:20px;padding:8px 14px;font-family:'Cairo',sans-serif;font-weight:800;font-size:12px;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.4);z-index:250;}
+  .lb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:260;}
+  .lb-panel{background:var(--paper);border-radius:10px;max-width:440px;width:100%;max-height:82vh;overflow:auto;padding:20px 18px 22px;box-shadow:0 20px 50px rgba(0,0,0,.5);}
+  .lb-panel h3{font-family:'Rakkas',serif;color:var(--stamp);font-size:20px;margin:0 0 4px;text-align:center;}
+  .lb-sub{font-size:11.5px;color:var(--ink-soft);text-align:center;margin-bottom:12px;}
+  .lb-row{display:flex;align-items:center;gap:8px;background:#fffefb;border:1px solid var(--line);border-radius:6px;padding:9px 12px;margin-bottom:6px;font-size:13.5px;}
+  .lb-row.me{border-color:var(--stamp);background:#fbeee8;}
+  .lb-rank{font-weight:800;color:var(--gold);width:22px;flex:0 0 auto;}
+  .lb-name{flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .lb-progress{font-size:10.5px;color:var(--ink-soft);flex:0 0 auto;}
+  .lb-score{font-weight:800;color:var(--success);flex:0 0 auto;min-width:30px;text-align:center;}
+  .lb-empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:16px 0;}
+  .lb-close{display:block;margin:14px auto 0;background:var(--ink);color:#fff8ec;border:none;padding:9px 22px;border-radius:6px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;}
+
+  .footer-tools{text-align:center;margin-top:18px;}
+  .footer-tools button{background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--paper-edge);font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer;margin:0 4px;}
+
+  @media (max-width:400px){.masthead h1{font-size:25px;} .legend{grid-template-columns:repeat(5,1fr);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="kicker">ملف قضية رقم ٧٧٤ — سري وشخصي</div>
+    <h1>قضية الفيلا الصامتة — الملف الثاني</h1>
+  </div>
+  <div class="folder">
+    <div class="folder-tab">فريق التحقيق</div>
+    <div class="folder-body" id="app"></div>
+  </div>
+</div>
+
+<button class="lb-btn" id="lbOpenBtn" type="button">🏆 الترتيب</button>
+<div class="lb-overlay" id="lbOverlay" style="display:none;">
+  <div class="lb-panel">
+    <h3>🏆 لوحة الترتيب المباشرة</h3>
+    <div class="lb-sub">كل الفرق شايفة نفس الترتيب ده أول بأول</div>
+    <div id="lbList"><div class="lb-empty">بنجيب الترتيب...</div></div>
+    <button class="lb-close" id="lbCloseBtn" type="button">قفل</button>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   SECTION 1: DATA
+   ========================================================================= */
+const SUSPECTS = [
+  {id:'salma',   name:'سلمى الفار',    role:'الزوجة'},
+  {id:'adel',    name:'عادل حمدي',     role:'الشريك في الشركة'},
+  {id:'yasmine', name:'ياسمين سعيد',   role:'السكرتيرة الشخصية'},
+  {id:'hossam',  name:'حسام الفار',    role:'الأخ الأصغر'},
+  {id:'sayed',   name:'سيد عبدالله',   role:'الحارس الشخصي'},
+];
+const SUSPECT_BIOS = {
+  salma:'كانت في البيت طول الليل. بتقول إنها كانت نايمة من الساعة عشرة.',
+  adel:'شريك كريم في الشركة. اتخانق معاه بالليل على موضوع فلوس ناقصة، وبيقول إنه مشى بدري.',
+  yasmine:'السكرتيرة الشخصية لكريم من 4 سنين. بتقول إنها قعدت في المكتبة تشتغل على أوراق لحد الساعة 11:30 تقريبًا.',
+  hossam:'الأخ الأصغر. عنده ديون، واتخانق مع كريم بالنهار على فلوس. بيقول إنه مشى بدري قوي.',
+  sayed:'الحارس الشخصي والسائق. بيقول إنه كان بيعمل جولة حراسة حوالين الفيلا طول الليل.',
+};
+const WEAPONS = [
+  {id:'gun', name:'مسدس'}, {id:'poison', name:'سم في الشاي'}, {id:'knife', name:'سكينة'},
+  {id:'rope', name:'حبل خنق'}, {id:'statue', name:'تمثال رخام'},
+];
+const LOCATIONS = [
+  {id:'office', name:'المكتب'}, {id:'bedroom', name:'غرفة النوم'}, {id:'kitchen', name:'المطبخ'},
+  {id:'garden', name:'الجنينة'}, {id:'library', name:'المكتبة'},
+];
+const MOTIVES = [
+  {id:'money', name:'اختلاس فلوس الشركة'}, {id:'affair', name:'خيانة زوجية'}, {id:'inherit', name:'الميراث'},
+  {id:'revenge', name:'انتقام قديم'}, {id:'scandal', name:'التهديد بفضيحة'},
+];
+const ENTRY_OPTIONS = [
+  {id:'a_gate', name:'من البوابة الرئيسية سيرًا على الأقدام'},
+  {id:'b_kitchen', name:'من الباب الخلفي جنب المطبخ'},
+  {id:'c_terrace', name:'من تراس الجنينة اللي بيوصل بين المكتبة والمكتب مباشرة، من غير كاميرا ولا بطاقة دخول'},
+  {id:'d_window', name:'من شباك غرفة النوم'},
+];
+const TIME_OPTIONS = [
+  {id:'t2315', name:'11:15 بالليل'}, {id:'t2322', name:'11:22 بالليل'},
+  {id:'t2331', name:'11:31 بالليل'}, {id:'t2345', name:'11:45 بالليل'},
+];
+const TIMELINE_SLOTS = [
+  {id:'t2100', label:'9:00 بالليل'}, {id:'t2200', label:'10:00 بالليل'}, {id:'t2230', label:'10:30 بالليل'},
+  {id:'t2300', label:'11:00 بالليل'}, {id:'t2315', label:'11:15 بالليل'}, {id:'t2322', label:'11:22 بالليل'},
+  {id:'t2330', label:'11:30 بالليل'}, {id:'t2331', label:'11:31 بالليل'}, {id:'t2345', label:'11:45 بالليل'},
+  {id:'t0000', label:'12:00 (بعد نص الليل)'},
+];
+const ANSWER = {suspect:'hossam', weapon:'statue', location:'office', motive:'inherit', time:'t2331', entry:'c_terrace', misleading:'yasmine'};
+const RED_HERRING_POOL = ['E02','E13','E19'];
+const PROOF_POOL = ['E08','E09','E10','E14','E15','E16','E17','E18','E24','E26','E30','E34','E35'];
+
+/* Timeline event bank: 10 correct events (mapped to slots) + 4 decoys (slot:null) */
+const TIMELINE_EVENTS = [
+  {id:'ev1',  text:'مشادة كلامية بين كريم وعادل في المكتب بخصوص فلوس ناقصة من حساب الشركة', slot:'t2100'},
+  {id:'ev2',  text:'عربية عادل بتخرج من بوابة الفيلا الرئيسية (كاميرا البوابة)', slot:'t2200'},
+  {id:'ev3',  text:'حد بيستخدم لابتوب عادل المفتوح جوه المكتب عشان يعمل تحويل مالي مشبوه باسمه', slot:'t2230'},
+  {id:'ev4',  text:'كريم بيكلم المحاسب مصطفى تليفونيًا لمدة 6 دقايق بخصوص أرقام غريبة', slot:'t2300'},
+  {id:'ev5',  text:'كريم بيبعت رسالة لياسمين: "تعالي المكتب دلوقتي، لازم نتكلم"', slot:'t2315'},
+  {id:'ev6',  text:'ياسمين بتسيب المكتبة وتتجه للمكتب عن طريق تراس الجنينة', slot:'t2322'},
+  {id:'ev7',  text:'مواجهة قصيرة بين كريم وياسمين في المكتب حول الأرقام اللي اكتشفها، وبتسيب المكتب مضايقة بعد دقايق', slot:'t2330'},
+  {id:'ev8',  text:'حسام، اللي كان راجع الفيلا في الخفاء ومستني في الجنينة، بيدخل من التراس فور ما ياسمين تمشي، وبيتخانق مع كريم على الفلوس، والخناقة بتتطور لضربة قوية بالتمثال الرخامي كريم بيتوفى بيها على الفور تقريبًا', slot:'t2331'},
+  {id:'ev9',  text:'سيد بيبلغ غرفة الحراسة عبر اللاسلكي إنه لسه بيعمل جولته وكل حاجة هادية', slot:'t2345'},
+  {id:'ev10', text:'عربية ياسمين بتخرج من بوابة الفيلا الرئيسية (كاميرا البوابة)', slot:'t0000'},
+  {id:'ev11', text:'سلمى بتنزل تشرب حاجة سخنة في المطبخ وتكلم أختها تليفونيًا', slot:null},
+  {id:'ev12', text:'حسام بيرجع الفيلا تاني بعد الخناقة (يقول إنه عشان ياخد حاجاته) — مفيش كاميرا ولا سجل رسمي يقدر يحدد وقت رجوعه بالظبط', slot:null},
+  {id:'ev13', text:'عادل بيرجع الفيلا بعد ما يخلص عشاه بره', slot:null},
+  {id:'ev14', text:'سيد بيلاقي جثة كريم في المكتب أثناء الجولة الأخيرة', slot:null},
+];
+
+/* ---- Evidence: id, cat, title, room(r1/r2), cls(critical/partial/red_herring/contradiction),
+       text (what players see), meaning (developer truth for debrief), susp/loc/time tags ---- */
+const EVIDENCE = [
+  // ROOM 1 — available from the start
+  {id:'E01', cat:'كاميرا البوابة', title:'سجل كاميرا البوابة الرئيسية', room:'r1', cls:'critical',
+   text:'البوابة الرئيسية مسجلة طول الليل. المهم فيها:\n— عربية حسام الفار خرجت الساعة 6:10 مساءً.\n— عربية عادل حمدي خرجت الساعة 10:00 بالليل بالظبط.\n— عربية ياسمين سعيد خرجت الساعة 12:07 بعد نص الليل.\n— مفيش أي عربية أو حد داخل من البوابة بعد الساعة 10 بالليل.',
+   meaning:'يثبت خروج عادل الفعلي الساعة 10:00 (مش 9 زي ما قال) وخروج ياسمين المتأخر بعد الجريمة. الفيلا لم يدخلها أحد من الخارج.',
+   susp:['adel','yasmine','hossam'], loc:[], time:['t2200','t0000']},
+  {id:'E04', cat:'كاميرا باب خلفي', title:'كاميرا الباب الخلفي جنب المطبخ', room:'r1', cls:'partial',
+   text:'الكاميرا دي بتراقب الباب الخلفي جنب المطبخ بس. المراجعة الكاملة للتسجيل من الساعة 9 لحد 1 بعد نص الليل: مفيش أي حركة دخول أو خروج مسجلة خالص.',
+   meaning:'يوهم بإن مفيش حد تحرك في الفيلا، لكنه بيغطي باب واحد بس — مش كل المسارات (زي تراس المكتب).',
+   susp:[], loc:['kitchen'], time:[]},
+  {id:'E05', cat:'بطاقات الدخول', title:'سجل بطاقات الدخول الإلكترونية', room:'r1', cls:'partial',
+   text:'الفيلا فيها قارئ بطاقات على 3 أبواب بس: المدخل الرئيسي، باب المطبخ الخلفي، باب الموظفين. من 11 بالليل لحد 12: القارئ سجل استخدام واحد بس — بطاقة سيد عبدالله الساعة 11:40 على باب المطبخ (جزء من جولته).',
+   meaning:'يعطي إحساس كاذب إن "مفيش حد اتحرك" لأن أهم باب في القضية (تراس المكتب/المكتبة) مالوش قارئ بطاقات أصلًا.',
+   susp:['sayed'], loc:['kitchen'], time:['t2340']},
+  {id:'E06', cat:'سجل لاسلكي الحراسة', title:'سجل لاسلكي سيد عبدالله', room:'r1', cls:'critical',
+   text:'تسجيلات اللاسلكي بين سيد وغرفة الحراسة:\n— 10:35: "بادئ الجولة، كل حاجة هادية."\n— 11:05: "لسه على الجانب الشمالي، هادي."\n— 11:45: "لسه بعمل الجولة وكل حاجة هادية."',
+   meaning:'يثبت إن سيد كان بره الفيلا يعمل جولة، وإن بلاغه الساعة 11:45 حقيقي ومتوافق مع كلامه — لكن جدول جولته (دليل تاني) هيوضح إنه ماكانش قريب من تراس المكتب وقت الجريمة.',
+   susp:['sayed'], loc:['garden'], time:['t2230','t2300','t2345']},
+  {id:'E07', cat:'ورقة مواعيد بخط اليد', title:'جدول جولة سيد الأسبوعي (مكتوب بخط اليد)', room:'r1', cls:'critical',
+   text:'ورقة مكتوبة بخط سيد بتوضح تقسيم الجولة كل نص ساعة:\n10:30–11:00: الجانب الجنوبي (بوابة السيارات)\n11:00–11:30: الجانب الشمالي (مطبخ وموقف الخدمة)\n11:30–12:00: الجانب الشرقي (سور الجنينة الخارجي)\n\n"ملحوظة: تراس المكتب مش جزء من مسار الجولة لأنه جوه السور مباشرة."',
+   meaning:'دليل مهم مؤجل الأثر: بيثبت إن سيد ماكانش في منطقة تراس المكتب/المكتبة وقت 11:15–11:45، فمفيش شاهد عيان ممكن يشوف اللي حصل هناك.',
+   susp:['sayed'], loc:['garden','office'], time:['t2315','t2345']},
+  {id:'E09', cat:'مستند ممزق (نص 1)', title:'قصاصة أمر صيانة — النص الأول', room:'r1', cls:'partial',
+   text:'قصاصة ورق ممزقة اتلقت في أرض غرفة الحراسة، فيها جزء من نص:\n"...بخصوص كاميرا الممر الداخلي جنب المكتب: لاحظنا إن الساعة الداخلية للكاميرا..."\n(باقي الكلام ممزوق)',
+   meaning:'نص فني إداري مقطوع — مالوش معنى واضح لوحده، لازم يتوصل بالقصاصة التانية (E10).',
+   susp:[], loc:['office'], time:[]},
+  {id:'E11', cat:'تقرير الطب الشرعي', title:'تقرير الطبيب الشرعي', room:'r1', cls:'critical',
+   text:'"سبب الوفاة: إصابة قوية في مؤخرة الرأس ناتجة عن جسم صلب وتقيل. الوفاة حصلت بسرعة تقريبًا. تقدير وقت الوفاة: بين الساعة 11:15 و11:45 بالليل، استنادًا لدرجة حرارة الجثة وتيبس العضلات وقت الفحص الساعة 1 بعد نص الليل."',
+   meaning:'يحدد نافذة زمنية للوفاة (30 دقيقة) لازم كل الأدلة التانية تتوافق معاها.',
+   susp:[], loc:['office'], time:['t2315','t2345']},
+  {id:'E12', cat:'صورة مسرح الجريمة', title:'صورة: رف المكتب الفاضي', room:'r1', cls:'critical',
+   text:'صورة لرف خشبي في المكتب عليه علامة غبار على شكل دائرة — واضح إنه كان فيه حاجة تقيلة وقعدت هناك فترة طويلة وبقت مش موجودة. تحت الرف على السجادة فيه فتافيت رخام صغيرة جدًا.',
+   meaning:'يثبت إن سلاح الجريمة كان قطعة ديكور رخامية كانت على الرف ده، ومش موجودة دلوقتي.',
+   susp:[], loc:['office'], time:[]},
+  {id:'E13', cat:'صور إضافية من مسرح الجريمة', title:'صور: زجاجة نبيت وتمثال الجنينة', room:'r1', cls:'red_herring',
+   text:'صورة 1: زجاجة نبيت فاضية جنب الكرسي، عليها بصمات كريم بس، من غير أي أثر دم أو كسر.\nصورة 2: تمثال رخامي في الجنينة، متغطي بتراب وطحالب قديمة، واضح إنه فاضل في مكانه من شهور.',
+   meaning:'حاجتين ملهمش علاقة بالجريمة: الزجاجة سليمة تمامًا، وتمثال الجنينة قديم وما اتحركش. مقصود بيهم إشغال الفريق عن الرف الفاضي الحقيقي.',
+   susp:[], loc:['office','garden'], time:[]},
+  {id:'E19', cat:'حركة مالية', title:'سجل تحويل مالي بقيمة 250,000 جنيه', room:'r1', cls:'red_herring',
+   text:'سجل من حسابات الشركة: تحويل 250,000 جنيه لحساب خارجي مجهول، تم الساعة 10:30 بالليل، باستخدام بيانات دخول تسجل باسم "عادل حمدي".',
+   meaning:'يبدو دليل قوي جدًا ضد عادل، لكن أدلة تانية (GPS + فاتورة مطعم + سجل عربيته) هتثبت إنه ماكانش ممكن يعمل التحويل ده بنفسه في نفس التوقيت.',
+   susp:['adel'], loc:['office'], time:['t2230']},
+  {id:'E24', cat:'مفكرة مواعيد بخط اليد', title:'مفكرة كريم — يوم بكرة', room:'r1', cls:'critical',
+   text:'صفحة يوم الغد في مفكرة كريم، مكتوب فيها بخط يده:\n"9 الصبح — اجتماع مع مصطفى (المحاسب) — مراجعة قانونية عاجلة — ماحدش يعرف قبل كده، حتى ياسمين."',
+   meaning:'يثبت إن كريم كان مخطط يعمل تدقيق مالي رسمي صبح اليوم اللي بعده، وإنه كان قلقان من حد قريب منه تحديدًا — وده اللي دفعه يتصرف بسرعة في نفس الليلة.',
+   susp:['yasmine'], loc:[], time:[]},
+  {id:'E28', cat:'أقوال شاهد', title:'أقوال سلمى الفار', room:'r1', cls:'contradiction',
+   text:'"كنت نايمة من الساعة عشرة بالليل، وصحيت على صوت سيد وهو بيصرخ. معنديش أي فكرة عن اللي حصل."',
+   meaning:'غير دقيقة: سجل مكالماتها (E33) بيثبت إنها كانت صاحية وبتكلم أختها الساعة 11:20. كذبت بس لأسباب شخصية محرجة، مش علاقة لها بالجريمة.',
+   susp:['salma'], loc:['bedroom'], time:['t2200']},
+  {id:'E29', cat:'أقوال شاهد', title:'أقوال عادل حمدي', room:'r1', cls:'contradiction',
+   text:'"اتخانقت مع كريم على موضوع الفلوس، ومشيت من الفيلا على طول بعد الخناقة، حوالي الساعة 9 بالليل، قبل ما يحصل أي حاجة."',
+   meaning:'كذب في التوقيت: كاميرا البوابة (E01) بتثبت إنه فضل في الفيلا لحد الساعة 10 بالظبط. الكذبة دي بسيطة ومحرجة (فضل يفكر لوحده) مش دليل على جريمة، وهو برة تمامًا وقت الوفاة.',
+   susp:['adel'], loc:['office'], time:['t2100','t2200']},
+  {id:'E30', cat:'أقوال شاهد', title:'أقوال ياسمين سعيد', room:'r1', cls:'critical',
+   text:'"كنت في المكتبة أشتغل على أوراق لحد حوالي 11:30، وبعدين رحت بيتي على طول من غير ما أشوف حد."',
+   meaning:'الأقوال دي فيها كذب مقصود: هي فعلًا سابت المكتبة الساعة 11:22 واتجهت للمكتب (مش قعدت فيها) وماشيتش على طول — طلعت من البوابة الساعة 12:07 بس.',
+   susp:['yasmine'], loc:['library'], time:['t2330']},
+  {id:'E31', cat:'أقوال شاهد', title:'أقوال حسام الفار', room:'r1', cls:'partial',
+   text:'"اتخانقت مع كريم الساعة 6 العصر على موضوع فلوس كان لازم يديهالي، وبعدها مشيت على طول من الفيلا."',
+   meaning:'صحيح ومؤكد بكاميرا البوابة (E01) الساعة 6:10 مساءً — يعني هو بره الفيلا بساعات كتير قبل الجريمة، برغم إن عنده دافع مالي واضح.',
+   susp:['hossam'], loc:[], time:['t2100']},
+  {id:'E32', cat:'أقوال شاهد', title:'أقوال سيد عبدالله', room:'r1', cls:'partial',
+   text:'"كنت بعمل جولة حراسة حوالين الفيلا من 10 ونص لحد 12، زي كل ليلة. مسمعتش ولا شفت حاجة غريبة."',
+   meaning:'صحيح ومتوافق تمامًا مع سجل اللاسلكي (E06) وجدول الجولة (E07) — بس بيوضح كمان إن مسار جولته ماكانش بيغطي تراس المكتب.',
+   susp:['sayed'], loc:['garden'], time:['t2230','t2345']},
+  {id:'E34', cat:'ورقة تهديد', title:'ورقة مطوية في جاكيت حسام', room:'r1', cls:'critical',
+   text:'"آخر تنبيه: لو الفلوس ماوصلتش الأسبوع ده، هنضطر نتصرف. ماتخليناش نيجي للفيلا." — بدون توقيع.',
+   meaning:'ورقة تهديد حقيقية من مرابي حسام كان مدين له. الضغط ده هو اللي فسّر ليه حسام كان يائس لدرجة إنه يرجع الفيلا بالليل ويواجه كريم لوحده على الفلوس — الدافع الحقيقي وراء الجريمة.',
+   susp:['hossam'], loc:[], time:[]},
+  {id:'E35', cat:'مخطط الفيلا', title:'مخطط الدور الأرضي للفيلا', room:'r1', cls:'critical',
+   text:'مخطط ورقي للدور الأرضي، عليه علامات: 📷 كاميرا، 🪪 قارئ بطاقات، على الأبواب دي بس:\n— المدخل الرئيسي: 📷 + 🪪\n— الباب الخلفي جنب المطبخ: 📷 + 🪪\n— باب الموظفين: 🪪\nكل الغرف التانية متصلة ببعض بممرات داخلية عادية من غير أي علامة، وفيه تراس خارجي صغير بيوصل مباشرة بين المكتب والمكتبة، بدون أي علامة عليه في المخطط.',
+   meaning:'المخطط هو مفتاح لغز "الدخول والخروج": التراس بين المكتب والمكتبة هو المسار الوحيد من غير كاميرا ولا بطاقة دخول في الفيلا كلها.',
+   susp:[], loc:['office','library','garden'], time:[]},
+  {id:'E36', cat:'ورقة مشفّرة', title:'ورقة مشفّرة من جيب كريم', room:'r1', cls:'critical',
+   text:'ورقة صغيرة اتلقت في جيب كريم فيها أرقام مشفّرة بخط يده — يبدو إنه كان مسجل لنفسه ملاحظة سرية.',
+   meaning:'بعد فك التشفير: "عادل بيكدب علينا" — يثبت إن كريم نفسه كان مركّز شكه على عادل بسبب التحويل المالي، من غير ما يعرف إن اللي عمل التحويل ده حد تاني تمامًا.',
+   susp:['adel'], loc:[], time:[]},
+
+  // ROOM 2 — unlocked after solving 2 of the 4 starter puzzles
+  {id:'E02', cat:'كاميرا البوابة', title:'لقطة باهتة من كاميرا البوابة — 11:45', room:'r2', cls:'red_herring',
+   text:'لقطة مش واضحة من كاميرا البوابة الساعة 11:45 بالليل، فيها عربية SUV شبه عربية عادل بترجع تاني ناحية الفيلا.',
+   meaning:'مش عربية عادل — عربية جاره اللي بيسكن جنب الفيلا وليها نفس الموديل واللون. اللقطة مضللة لو اتفسرت لوحدها.',
+   susp:['adel'], loc:[], time:['t2345']},
+  {id:'E03', cat:'صورة مقربة', title:'صورة مقرّبة للوحة الأرقام من اللقطة السابقة', room:'r2', cls:'partial',
+   text:'بعد تكبير اللقطة، لوحة الأرقام واضحة: مش نفس رقم عربية عادل (اتأكد من رخصة عربيته في ملف الشركة).',
+   meaning:'يحل لغز E02 نهائيًا: مفيش أي عربية رجعت للفيلا بعد خروجها.',
+   susp:['adel'], loc:[], time:['t2345']},
+  {id:'E08', cat:'كاميرا داخلية تالفة', title:'كاميرا الممر الداخلي (طابع زمني تالف)', room:'r2', cls:'contradiction',
+   text:'لقطة من كاميرا الممر الداخلي القريب من المكتب، فيها شبح شخص متجه ناحية باب المكتب. الطابع الزمني المكتوب على اللقطة: 10:50 بالليل — بس فيه مشكلة معروفة في ساعة الكاميرا دي (شايفين ملاحظة فنية في مكان تاني).',
+   meaning:'الوقت الحقيقي بعد التصحيح هو 11:22 بالليل (الكاميرا متأخرة 32 دقيقة). الشبح ده هو ياسمين وهي رايحة للمكتب.',
+   susp:['yasmine'], loc:['office'], time:['t2322']},
+  {id:'E10', cat:'مستند ممزق (نص 2)', title:'قصاصة أمر صيانة — النص الثاني', room:'r2', cls:'partial',
+   text:'قصاصة ورق تانية اتلقت في درج مكتب الحراسة:\n"...بتتأخر 32 دقيقة عن الوقت الحقيقي بسبب انقطاع كهرباء الأسبوع اللي فات. معاد الإصلاح: الخميس الجاي."',
+   meaning:'بتكمّل النص المقطوع في E09. لما تتحط الاتنين مع بعض، بتظهر الحقيقة الكاملة عن عطل كاميرا الممر.',
+   susp:[], loc:['office'], time:[]},
+  {id:'E14', cat:'تقرير بصمات', title:'تقرير البصمات — التمثال الرخامي', room:'r2', cls:'critical',
+   text:'بصمة جزئية ومطموسة جزئيًا على قاعدة التمثال (اللي اتلقى مرمي بعيد عن مكانه). المعمل قدر يستبعد بصمات سيد وياسمين تمامًا. الاحتمال الأقرب (وغير مؤكد لوحده): بصمة حسام، بنسبة تطابق جزئي.',
+   meaning:'دليل داعم بس مش كافي لوحده — البصمة مطموسة، ولازم تتأكد بأدلة تانية (الخيط والإيصال والصورة).',
+   susp:['hossam','salma'], loc:['office'], time:[]},
+  {id:'E15', cat:'صورة أثر قدم', title:'أثر قدم موحل بجانب باب التراس', room:'r2', cls:'critical',
+   text:'أثر حذاء بمقاس رجالي متوسط، بنعل خشن شبه حذاء رياضة أو حذاء مشي، بجانب باب التراس الخارجي للمكتب، متوحل شوية من ندى الجنينة.',
+   meaning:'نقشة النعل دي بتتطابق مع حذاء حسام اللي اتلاقى في عربيته — دليل إضافي إنه فعلًا كان واقف قدام باب التراس في وقت قريب من الجريمة.',
+   susp:['hossam'], loc:['office','garden'], time:[]},
+  {id:'E16', cat:'خيط قماش', title:'خيط قماش عالق في مقبض باب التراس', room:'r2', cls:'critical',
+   text:'خيط قماش قطني سميك، لونه أزرق داكن (تقريبًا جينز)، عالق في مفصلة باب التراس بتاع المكتب — يبدو إنه اتقطع من هدوم حد كان بيفتح الباب ده بسرعة أو بعنف.',
+   meaning:'من نفس نوع قماش جاكيت حسام (يتأكد بـ E17 و E18).',
+   susp:['hossam'], loc:['office'], time:[]},
+  {id:'E17', cat:'إيصال محل', title:'إيصال شراء جاكيت جينز داكن', room:'r2', cls:'critical',
+   text:'إيصال من محل ملابس رجالي باسم "حسام الفار"، اشترى بيه جاكيت جينز أزرق داكن، بتاريخ قبل الحادثة بشهر تقريبًا.',
+   meaning:'يربط نوع القماش في E16 بحسام تحديدًا.',
+   susp:['hossam'], loc:[], time:[]},
+  {id:'E18', cat:'صورة', title:'صورة من حفلة الموظفين', room:'r2', cls:'partial',
+   text:'صورة من حفلة صغيرة للموظفين قبل الحادثة بأسبوع، حسام لابس فيها نفس الجاكيت الجينز الداكن من الإيصال.',
+   meaning:'تأكيد بصري إضافي إن الجاكيت فعلًا بتاع حسام ولابسه بانتظام.',
+   susp:['hossam'], loc:[], time:[]},
+  {id:'E20', cat:'سجل هاتف (GPS)', title:'سجل تحديد موقع تليفون عادل', room:'r2', cls:'critical',
+   text:'شركة الاتصالات أكدت إن تليفون عادل كان متصل ببرج شبكة قريب من مطعم "نسمة البحر" في وسط البلد من الساعة 10:20 لحد 11:50 بالليل.',
+   meaning:'يثبت إن عادل ماكانش موجود في الفيلا وقت التحويل المالي (10:30) ولا وقت الجريمة (11:15–11:45).',
+   susp:['adel'], loc:[], time:['t2200','t2230','t2315','t2345']},
+  {id:'E21', cat:'فاتورة مطعم', title:'فاتورة مطعم "نسمة البحر"', room:'r2', cls:'partial',
+   text:'فاتورة طاولة شخص واحد باسم "أ. حمدي"، الوقت المطبوع عليها 10:35 بالليل لحد 11:40 بالليل تقريبًا.',
+   meaning:'دليل مادي إضافي يأكد وجود عادل في المطعم طول نافذة الجريمة تمامًا.',
+   susp:['adel'], loc:[], time:['t2230','t2345']},
+  {id:'E22', cat:'سجل GPS العربية', title:'سجل تتبع GPS عربية عادل', room:'r2', cls:'partial',
+   text:'نظام التتبع في عربية عادل بيوضح مسار واحد بس: من الفيلا للمطعم الساعة 10:05، ومن المطعم لبيته مباشرة الساعة 11:55 — مفيش أي رجوع للفيلا في نفس الليلة.',
+   meaning:'يقفل تمامًا احتمالية رجوع عادل للفيلا، ويفسر اللقطة الباهتة E02 كخطأ/تشابه.',
+   susp:['adel'], loc:[], time:['t2200','t0000']},
+  {id:'E23', cat:'تقرير مالي', title:'تقرير المحاسب الخارجي مصطفى', room:'r2', cls:'critical',
+   text:'"راجعت فواتير الموردين آخر 14 شهر. فيه مبالغ صغيرة بتتسرب بانتظام من كل فاتورة، بمعرفة الموظف اللي بيعالج الفواتير مباشرة قبل ما توصلي — مش من حساب الشركاء. المجموع التراكمي كبير. طلبت من كريم اجتماع عاجل صبح بكره لعرض التفاصيل كاملة."',
+   meaning:'دليل حقيقي على اختلاس بطيء وممتد على شهور، بمعرفة ياسمين، ومختلف تمامًا عن تحويل الـ250 ألف "الصاخب" اللي اتحط كطعم. ده بيفسر رعبها وكذبها في التحقيق ورسالتها المحذوفة — لكنه سر منفصل عن جريمة القتل نفسها، مش دليل إنها هي القاتلة.',
+   susp:['yasmine'], loc:[], time:[]},
+  {id:'E25', cat:'سجل مكالمات', title:'سجل مكالمات تليفون كريم', room:'r2', cls:'partial',
+   text:'مكالمة صادرة من تليفون كريم لمصطفى المحاسب، الساعة 11:00 بالليل، استمرت 6 دقايق.',
+   meaning:'يثبت إن كريم فعلًا تحرك بجدية بعد ما شك في حاجة، بنفس ليلة وفاته.',
+   susp:[], loc:[], time:['t2300']},
+  {id:'E26', cat:'رسائل هاتف', title:'رسائل واتساب — كريم وياسمين', room:'r2', cls:'critical',
+   text:'كريم (11:15م): "تعالي المكتب دلوقتي، لازم نتكلم."\nياسمين (11:16م): "تمام، جاية."\n(مفيش رسايل بعد كده من الطرفين لحد الصبح)',
+   meaning:'يثبت إن ياسمين اتنادت للمكتب في نفس نافذة الجريمة، ويتعارض تمامًا مع أقوالها إنها فضلت في المكتبة.',
+   susp:['yasmine'], loc:['office'], time:['t2315']},
+  {id:'E27', cat:'رسالة محذوفة (استرجاع)', title:'رسالة محذوفة من تليفون ياسمين', room:'r2', cls:'critical', locked:true,
+   text:'بعد استرجاعها فنيًا: رسالة مبعوتة الساعة 2 بعد الضهر من نفس اليوم، من ياسمين لرقم مش محفوظ: "لو حد عرف بالموضوع أنا خلصت."',
+   meaning:'بتثبت إن ياسمين كانت خايفة ومتوترة من اكتشاف حاجة معينة من قبل ما يحصل أي مواجهة مع كريم بالليل — يعني كانت عارفة إن في حاجة هتتكشف قريب.',
+   susp:['yasmine'], loc:[], time:[]},
+  {id:'E33', cat:'سجل مكالمات', title:'سجل مكالمات تليفون سلمى', room:'r2', cls:'contradiction',
+   text:'مكالمة صادرة من تليفون سلمى لرقم أختها، الساعة 11:20 بالليل، استمرت 12 دقيقة.',
+   meaning:'يثبت إنها كانت صاحية فعلًا وقت ما قالت إنها نايمة — لكن المكالمة شخصية وعائلية، ملهاش علاقة بالجريمة. كذبة إحراج مش كذبة جريمة.',
+   susp:['salma'], loc:['bedroom'], time:['t2322']},
+];
+
+/* =========================================================================
+   SECTION 2: PUZZLES (data + hints)
+   ========================================================================= */
+const PUZZLES = {
+  P1:{title:'دليل ١ — ورقة مشفّرة (E36)', type:'شيفرة', color:'var(--crit)',
+      hints:[
+        'كل رقم بيرمز لحرف عربي حسب ترتيبه في الأبجدية (28 حرف)، بس مش مباشر.',
+        'اطرحوا 2 من كل رقم الأول، وبعدين دوروا على الحرف في الجدول.',
+        'لو الناتج بعد الطرح صفر أو أقل، ضيفوا 28 عليه (ترتيب دائري). "/" فاصل بين الكلمات.']},
+  P2:{title:'دليل ٢ — مين مكانه مش مؤكد؟', type:'لغز منطقي متعدد الخطوات', color:'var(--crit)',
+      hints:[
+        'قارنوا كل شاهد بدليل رسمي واحد على الأقل (كاميرا، لاسلكي، بطاقة دخول، سجل مكالمات) — لخروج الفيلا وللبقاء برّاها طول الوقت.',
+        'عادل عنده تلات أدلة مستقلة (GPS تليفون + فاتورة مطعم + GPS عربية) بتأكد إنه فضل برّه طول نافذة الجريمة. سلمى في البيت (سجل مكالمات). سيد بره في الجنينة (لاسلكي وجدول جولة). ياسمين نفسها بقى مكانها مؤكد برسائل وكاميرا مصححة.',
+        'كاميرا البوابة سجلت خروج عربية حسام مرة واحدة بس الساعة 6:10 مساءً. مفيش أي دليل رسمي بعد كده يأكد إنه فضل برّه الفيلا — ممكن يكون رجع سيرًا من غير ما يمر على كاميرا.']},
+  P3:{title:'دليل ٣ — مخطط الفيلا', type:'استنتاج من المخطط', color:'var(--crit)',
+      hints:[
+        'دوروا على المسار اللي معندوش أي علامة كاميرا أو بطاقة دخول في المخطط.',
+        'الممر الداخلي جنب المكتب فيه كاميرا (حتى لو عندها مشكلة فنية) — يبقى مش هو المسار "المفتوح".',
+        'المسار الوحيد الخالي تمامًا هو التراس الصغير اللي بيوصل مباشرة بين المكتب والمكتبة.']},
+  P4:{title:'دليل ٤ — استرجاع رسالة محذوفة', type:'تحقيق رسائل هاتف', color:'var(--part)',
+      hints:[
+        'رتّبوا القطع عشان تطلع جملة قصيرة بتدل على خوف من انكشاف حاجة.',
+        'الجملة بتبدأ بشرط ("لو...") وبتنتهي بكلمة بتدل على النهاية.',
+        'الترتيب الصحيح: "لو حد" / "عرف" / "بالموضوع" / "أنا" / "خلصت".']},
+  P5:{title:'دليل ٥ — التحقيق المالي', type:'تحقيق مالي', color:'var(--part)',
+      hints:[
+        'دوروا على أدلة بتثبت مكان عادل الفعلي وقت التحويل المالي (10:30 بالليل)، مش الأدلة اللي بتتهمه.',
+        'سجل الموقع (GPS) والفاتورة وسجل عربيته التلاتة بيثبتوا نفس الحاجة من مصادر مختلفة.',
+        'لازم تختاروا على الأقل دليلين من التلاتة دول، وماتختاروش سجل التحويل نفسه ولا أقوال عادل كدليل نفي.']},
+  P6:{title:'دليل ٦ — قصاصتين ممزوقتين', type:'معلومة مخفية في مستند', color:'var(--part)',
+      hints:[
+        'الاتنين قصاصات ورق ممزوقة بخصوص نفس الموضوع الفني.',
+        'دوروا على القصاصتين اللي بيتكلموا عن "كاميرا الممر" و"مشكلة في الساعة".',
+        'القصاصتين هما E09 وE10 بالظبط.']},
+  P7:{title:'دليل ٧ — تصحيح الطابع الزمني', type:'لغز رقمي', color:'var(--part)',
+      hints:[
+        'من القصاصتين اتضح إن الكاميرا متأخرة 32 دقيقة عن الوقت الحقيقي.',
+        'الوقت المكتوب على اللقطة كان 10:50 بالليل — ضيفوا الـ32 دقيقة عليه.',
+        '10:50 + 32 دقيقة = 11:22 بالليل.']},
+  P8:{title:'دليل ٨ — مين قال كلام بيتعارض مع كاميرا البوابة؟', type:'كشف كذب', color:'var(--crit)',
+      hints:[
+        'قارنوا كل أقوال شاهد بسجل كاميرا البوابة (E01) بالظبط.',
+        'شاهد واحد قال وقت مختلف تمامًا عن الوقت المسجل فعليًا لخروج عربيته.',
+        'عادل قال إنه مشى الساعة 9، لكن كاميرا البوابة سجلت خروج عربيته الساعة 10 بالظبط.']},
+  P9:{title:'دليل ٩ — تأكيد الهوية (تقاطع أدلة)', type:'تقاطع أدلة (3-4 قطع)', color:'var(--crit)',
+      hints:[
+        'البصمة لوحدها مش كفاية — دوروا على سلسلة أدلة تانية بتأكد بعضها.',
+        'فيه خيط قماش، وإيصال شراء، وصورة — التلاتة بيأكدوا نفس القماش ونفس الشخص.',
+        'الإجابة الصحيحة: خيط القماش (E16) + إيصال الجاكيت (E17) + صورة الحفلة (E18) — سيبوا أثر القدم برّه من التركيبة دي لأنه بيتأكد بشكل منفصل.']},
+  P10:{title:'دليل ١٠ — مواجهة ياسمين', type:'مواجهة استجواب', color:'var(--crit)',
+      hints:[
+        'التحويل المالي مش دليل ضدها — هو باسم عادل أصلًا.',
+        'الهدف من المواجهة دي مش إثبات إنها القاتلة، لكن كسر كذبتها عن وجودها في المكتبة عشان تحددوا بدقة إمتى بالظبط سابت المكتب.',
+        'أقوى نقطة ضعف: الرسالة اللي بتثبت إنها اتنادت للمكتب + الوقت المصحح للكاميرا اللي بيوريها متجهة للمكتب فعلًا — ده هيوريكم إنها كانت هناك، لكن هتأكد كمان إنها مشيت قبل وقت الوفاة.']},
+  P11:{title:'إعادة بناء الخط الزمني الكامل', type:'ترتيب زمني', color:'var(--crit)',
+      hints:[
+        'ابدأوا بالأحداث اللي ليها وقت مؤكد 100% من كاميرا أو سجل رسمي (زي خروج عادل الساعة 10).',
+        'استخدموا رسائل الواتساب (E26) عشان تحددوا وقتين مهمين قريبين من بعض (11:15 و11:16تقريبًا لـ11:22 بعد التصحيح).',
+        'تقرير الطب الشرعي بيحدد نافذة 11:15–11:45؛ الحدث اللي فيه "الضربة" لازم يكون جواها، وبعد المواجهة مباشرة.']},
+};
+
+/* =========================================================================
+   SECTION 3: STATE MANAGEMENT
+   ========================================================================= */
+const STORAGE_KEY = 'case774v1-state';
+const LB_LS_KEY = 'case774v1-leaderboard';
+const LB_API = new URL('leaderboard.php', window.location.href).href;
+
+function freshState(){
+  return {
+    teamName:'', teamKey:null, started:false, tab:'briefing',
+    score:100,
+    puzzles:{},          // {P1:true,...}
+    hintsUsed:{},        // {"P1_h1":true,...}
+    wrongCount:0,
+    links:{},            // {evId:{suspect,location,time,motive}}
+    status:{},           // {evId:'unreviewed'|'important'|'uncertain'|'red_herring_guess'|'connected'}
+    timelinePicks:{},    // {slotId: eventId}
+    p5picks:[], p6picks:[], p9picks:[],
+    boardReady:false,
+    finalSubmitted:false, finalPicks:null, finalResult:null,
+    modal:null,           // currently open evidence id
+  };
+}
+let state = freshState();
+
+function persist(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+function loadPersisted(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ const parsed = JSON.parse(raw); state = Object.assign(freshState(), parsed); }
+  }catch(e){}
+}
+loadPersisted();
+
+/* =========================================================================
+   SECTION 4: LEADERBOARD (shared storage, adapted from base file)
+   ========================================================================= */
+function lsRead(){ try{ return JSON.parse(localStorage.getItem(LB_LS_KEY)||'{}'); }catch(e){ return {}; } }
+function lsWrite(all){ localStorage.setItem(LB_LS_KEY, JSON.stringify(all)); }
+const localBoard = {
+  async set(key,value){ const all=lsRead(); all[key]=value; lsWrite(all); },
+  async get(key){ const all=lsRead(); return Object.prototype.hasOwnProperty.call(all,key)?{value:all[key]}:null; },
+  async list(prefix){ return {keys:Object.keys(lsRead()).filter(k=>k.startsWith(prefix))}; },
+  async delete(key){ const all=lsRead(); delete all[key]; lsWrite(all); }
+};
+const phpBoard = {
+  async all(){ const r=await fetch(LB_API,{cache:'no-store'}); if(!r.ok) throw new Error('http '+r.status); return r.json(); },
+  async set(key,value){ const r=await fetch(LB_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key,value})}); if(!r.ok) throw new Error('save failed'); },
+  async get(key){ const all=await this.all(); return Object.prototype.hasOwnProperty.call(all,key)?{value:all[key]}:null; },
+  async list(prefix){ const all=await this.all(); return {keys:Object.keys(all).filter(k=>k.startsWith(prefix))}; },
+  async delete(key){ const r=await fetch(LB_API+'?key='+encodeURIComponent(key),{method:'DELETE'}); if(!r.ok) throw new Error('delete failed'); }
+};
+const storageReady = (async ()=>{
+  if(window.storage && typeof window.storage.set==='function') return window.storage;
+  if(location.protocol==='http:'||location.protocol==='https:'){
+    try{ const r=await fetch(LB_API,{cache:'no-store'}); if(r.ok) return phpBoard; }catch(e){}
+  }
+  return localBoard;
+})();
+function slugify(s){ return (s||'').trim().toLowerCase().replace(/\s+/g,'-').replace(/[^\p{L}\p{N}-]/gu,'').slice(0,30)||'team'; }
+async function pushScore(){
+  if(!state.teamKey) return;
+  try{
+    const storage = await storageReady;
+    const solvedCount = Object.values(state.puzzles).filter(Boolean).length;
+    await storage.set('leaderboard:'+state.teamKey, JSON.stringify({
+      name: state.teamName, score: state.score, solvedCount,
+      finalSubmitted: state.finalSubmitted,
+      correctCount: state.finalResult ? state.finalResult.correctCount : 0,
+      updatedAt: Date.now()
+    }), true);
+  }catch(e){ console.error('leaderboard push failed', e); }
+}
+async function fetchLeaderboard(){
+  try{
+    const storage = await storageReady;
+    const list = await storage.list('leaderboard:', true);
+    if(!list||!list.keys||!list.keys.length) return [];
+    const entries = await Promise.all(list.keys.map(async k=>{
+      try{ const r=await storage.get(k,true); const v=r?JSON.parse(r.value):null; if(v) v.key=k; return v; }
+      catch(e){ return null; }
+    }));
+    return entries.filter(Boolean).sort((a,b)=> b.score-a.score || a.updatedAt-b.updatedAt);
+  }catch(e){ console.error('leaderboard fetch failed', e); return []; }
+}
+async function renderLeaderboard(){
+  const listEl = document.getElementById('lbList');
+  if(!listEl) return;
+  const entries = await fetchLeaderboard();
+  if(!entries.length){ listEl.innerHTML = '<div class="lb-empty">لسه محدش من الفرق بدأ أو سجل نتيجة.</div>'; return; }
+  listEl.innerHTML = entries.map((e,i)=>{
+    const mine = e.key === 'leaderboard:'+state.teamKey;
+    const progress = e.finalSubmitted ? `✅ ${e.correctCount}/7` : `${e.solvedCount}/11`;
+    return `<div class="lb-row${mine?' me':''}"><span class="lb-rank">#${i+1}</span><span class="lb-name">${esc(e.name)}</span><span class="lb-progress">${progress}</span><span class="lb-score">${e.score}</span></div>`;
+  }).join('');
+}
+let lbTimer = null;
+document.getElementById('lbOpenBtn').addEventListener('click', ()=>{
+  document.getElementById('lbOverlay').style.display='flex';
+  renderLeaderboard();
+  lbTimer = setInterval(renderLeaderboard, 4000);
+});
+function closeLb(){
+  document.getElementById('lbOverlay').style.display='none';
+  if(lbTimer){ clearInterval(lbTimer); lbTimer=null; }
+}
+document.getElementById('lbCloseBtn').addEventListener('click', closeLb);
+document.getElementById('lbOverlay').addEventListener('click', (ev)=>{ if(ev.target.id==='lbOverlay') closeLb(); });
+
+/* =========================================================================
+   SECTION 5: HELPERS
+   ========================================================================= */
+function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; }
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function byId(arr,id){ return arr.find(x=>x.id===id); }
+function nameOf(arr,id){ const f=byId(arr,id); return f?f.name:'—'; }
+function evById(id){ return EVIDENCE.find(e=>e.id===id); }
+
+function solved(pid){ return !!state.puzzles[pid]; }
+function solvePuzzle(pid){
+  if(!state.puzzles[pid]){ state.puzzles[pid]=true; persist(); pushScore(); }
+}
+function wrongAttempt(){
+  state.score -= 5; state.wrongCount = (state.wrongCount||0)+1; persist(); pushScore();
+}
+function room2Unlocked(){
+  return ['P1','P2','P3','P8'].filter(p=>solved(p)).length >= 2;
+}
+function evidenceUnlocked(ev){
+  if(ev.room==='r1') return true;
+  return room2Unlocked();
+}
+function evidenceContentReady(ev){
+  if(ev.locked && ev.id==='E27') return solved('P4');
+  return true;
+}
+function useHint(pid, level){
+  const cost = level===1?5:(level===2?10:20);
+  const key = pid+'_h'+level;
+  if(state.hintsUsed[key]) return;
+  if(!confirm('هل تريدون استخدام التلميح رقم '+level+'؟ هيتخصم '+cost+' نقطة من رصيدكم.')) return;
+  state.hintsUsed[key] = true;
+  state.score -= cost;
+  persist(); pushScore(); render();
+}
+
+/* =========================================================================
+   SECTION 6: RENDER — shell
+   ========================================================================= */
+const TABS = [
+  {id:'briefing', label:'البريفنج'},
+  {id:'evidence', label:'غرفة الأدلة'},
+  {id:'puzzles', label:'الألغاز'},
+  {id:'board', label:'لوحة القضية'},
+  {id:'final', label:'الاتهام النهائي'},
+];
+
+function render(){
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  if(!state.started){ app.appendChild(renderJoin()); return; }
+  app.appendChild(renderStatusBar());
+  app.appendChild(renderTabs());
+  let content;
+  if(state.tab==='briefing') content = renderBriefing();
+  else if(state.tab==='evidence') content = renderEvidenceRoom();
+  else if(state.tab==='puzzles') content = renderPuzzlesHub();
+  else if(state.tab==='board') content = renderCaseBoard();
+  else if(state.tab==='final') content = renderFinalTab();
+  app.appendChild(content);
+  if(state.modal){ app.appendChild(renderEvidenceModal(state.modal)); }
+  app.appendChild(renderFooterTools());
+}
+
+function renderJoin(){
+  const wrap = el(`<div>
+    <p style="line-height:1.9;font-size:14.5px;">
+      الليلة اللي فاتت، اتقتل رجل الأعمال <b>كريم الفار</b> جوه فيلته الخاصة على الساحل الشمالي، حوالين الساعة 12:30 بالليل بمعرفة حارسه.
+      مفيش آثار اقتحام، والبوابة مقفولة من بره. خمس شهود كانوا موجودين وقت الجريمة.
+      <br><br>
+      إنتوا فريق التحقيق. اللعبة دي محتاجة استنتاج حقيقي: هتفتحوا غرفة أدلة كاملة، تحلوا ألغاز مترابطة، تبنوا خط زمني دقيق، وتوصلوا لاتهام نهائي مدعوم بأدلة — مش مجرد تخمين.
+      المدة المتوقعة: من 90 لـ120 دقيقة.
+    </p>
+    <label class="field-label">اسم فريقكم</label>
+    <input type="text" id="teamNameInput" placeholder="مثلاً: فريق شرلوك" />
+    <button class="btn" id="startBtn" style="width:100%;margin-top:14px;">🔍 افتحوا الملف وابدأوا التحقيق</button>
+  </div>`);
+  wrap.querySelector('#startBtn').onclick = ()=>{
+    const v = wrap.querySelector('#teamNameInput').value.trim();
+    state.teamName = v || 'فريق مجهول';
+    state.teamKey = slugify(state.teamName) + '-' + Math.random().toString(36).slice(2,7);
+    state.started = true; state.tab = 'briefing';
+    persist(); pushScore(); render();
+  };
+  return wrap;
+}
+
+function renderStatusBar(){
+  return el(`<div class="statusbar">
+    <div class="team-pill">👥 ${esc(state.teamName)}</div>
+    <div class="clock-pill">⏱️ الهدف: 90–120 دقيقة</div>
+    <div class="score-pill">⭐ ${state.score}</div>
+  </div>`);
+}
+
+function renderTabs(){
+  const nav = el(`<div class="tabs"></div>`);
+  TABS.forEach(t=>{
+    const locked = t.id==='final' && !state.boardReady;
+    const b = el(`<button type="button">${t.label}${locked?' <span class="lock">🔒</span>':''}</button>`);
+    if(t.id===state.tab) b.classList.add('active');
+    b.onclick = ()=>{ state.tab = t.id; state.modal=null; persist(); render(); };
+    nav.appendChild(b);
+  });
+  return nav;
+}
+
+function renderFooterTools(){
+  const w = el(`<div class="footer-tools">
+    <button id="resetBtn" type="button">🗑️ ابدأوا من جديد</button>
+  </div>`);
+  w.querySelector('#resetBtn').onclick = ()=>{
+    if(confirm('متأكدين إنكم عايزين تمسحوا كل تقدمكم وتبدأوا من الأول؟ الإجراء ده نهائي.')){
+      localStorage.removeItem(STORAGE_KEY);
+      state = freshState();
+      render();
+    }
+  };
+  return w;
+}
+
+/* =========================================================================
+   SECTION 7: BRIEFING TAB
+   ========================================================================= */
+function renderBriefing(){
+  const w = el(`<div>
+    <h2 class="stage-title">البريفنج</h2>
+    <div class="stage-sub">اقروا الملف كويس قبل ما تنزلوا غرفة الأدلة</div>
+    <div class="storybox">
+      كريم الفار، 52 سنة، رجل أعمال معروف. لقاه حارسه الشخصي مرمي على الأرض جوه مكتبه الخاص، حوالين الساعة 12:30 بالليل.
+      مفيش كسر أبواب أو شبابيك، والبوابة الرئيسية كانت مقفولة طول الليل. يبقى الجاني كان بالفعل جوه الفيلا وقت الجريمة.
+      خمسة أشخاص كانوا موجودين في المكان: زوجته، شريكه في الشركة، سكرتيرته الشخصية، أخوه الأصغر، وحارسه الشخصي.
+    </div>
+    <div id="suspectsList"></div>
+    <details class="organizer">
+      <summary>⏱️ دليل الوقت المقترح للفريق المنظّم</summary>
+      <ul>
+        <li>البريفنج والتعرف على المشتبه بهم: 10 دقايق</li>
+        <li>غرفة الأدلة ١: 15 دقيقة</li>
+        <li>غرفة الأدلة ٢ (بعد فتحها): 15 دقيقة</li>
+        <li>الاستجواب وتحليل الأعذار: 15 دقيقة</li>
+        <li>الشيفرة والمعلومات المخفية: 15 دقيقة</li>
+        <li>ربط الأدلة على لوحة القضية: 15 دقيقة</li>
+        <li>الاستنتاج النهائي وتقديم ملف الاتهام: 10–20 دقيقة</li>
+      </ul>
+      <p>مش لازم تتبعوا الترتيب ده بالظبط — الألغاز متاحة بشكل مرن، وبعضها بيفتح أدلة تانية بعد حلها.</p>
+    </details>
+    <button class="btn" id="goEvidence" style="width:100%;margin-top:12px;">📂 روحوا غرفة الأدلة</button>
+  </div>`);
+  const list = w.querySelector('#suspectsList');
+  SUSPECTS.forEach(s=>{
+    list.appendChild(el(`<div class="suspect-card"><b>${s.name}</b> — ${s.role}<br>${SUSPECT_BIOS[s.id]}</div>`));
+  });
+  w.querySelector('#goEvidence').onclick = ()=>{ state.tab='evidence'; persist(); render(); };
+  return w;
+}
+
+/* =========================================================================
+   SECTION 8: EVIDENCE ROOM TAB
+   ========================================================================= */
+const STATUS_LABELS = {unreviewed:'لسه محدّش راجعها', important:'مهمة', uncertain:'مش متأكدين', red_herring_guess:'ممكن تكون تضليل', connected:'متربطة بنظرية'};
+
+function renderEvidenceRoom(){
+  const w = el(`<div>
+    <h2 class="stage-title">غرفة الأدلة</h2>
+    <div class="stage-sub">افتحوا أي دليل عشان تشوفوا تفاصيله وتربطوه بمشتبه به أو مكان أو وقت</div>
+  </div>`);
+  if(!room2Unlocked()){
+    w.appendChild(el(`<div class="cluebox">غرفة الأدلة التانية لسه مقفولة. حلّوا لغزين على الأقل من الألغاز الأربعة الأولى (الشيفرة، اللغز المنطقي، مخطط الفيلا، كشف الكذب) عشان تتفتح.</div>`));
+  }
+  const filterRow = el(`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+    <select id="statusFilter" style="width:auto;flex:1;">
+      <option value="">كل الحالات</option>
+      ${Object.keys(STATUS_LABELS).map(k=>`<option value="${k}">${STATUS_LABELS[k]}</option>`).join('')}
+    </select>
+  </div>`);
+  w.appendChild(filterRow);
+  const grid = el(`<div class="ev-grid"></div>`);
+  w.appendChild(grid);
+  function draw(filter){
+    grid.innerHTML='';
+    const visible = EVIDENCE.filter(evidenceUnlocked);
+    visible.filter(ev=>!filter || (state.status[ev.id]||'unreviewed')===filter).forEach(ev=>{
+      const st = state.status[ev.id]||'unreviewed';
+      const isLockedContent = !evidenceContentReady(ev);
+      const card = el(`<div class="ev-card">
+        <span class="ev-status${st!=='unreviewed'?' '+(st==='red_herring_guess'?'redf':st):''}">${STATUS_LABELS[st]}</span>
+        <div class="ev-cat">${ev.cat}</div>
+        <div class="ev-title">${ev.id} — ${ev.title}</div>
+        <div class="ev-snip">${isLockedContent ? '🔒 محتاج حل لغز معيّن عشان تتكشف كاملة' : esc(ev.text).slice(0,90)+'…'}</div>
+      </div>`);
+      card.onclick = ()=>{ state.modal = ev.id; render(); };
+      grid.appendChild(card);
+    });
+    if(!grid.children.length){ grid.appendChild(el(`<div class="locked-card">مفيش أدلة تتعرض بالفلتر ده دلوقتي.</div>`)); }
+  }
+  filterRow.querySelector('#statusFilter').onchange = (e)=>draw(e.target.value);
+  draw('');
+  return w;
+}
+
+function renderEvidenceModal(evId){
+  const ev = evById(evId);
+  const overlay = el(`<div class="modal-overlay"></div>`);
+  const contentReady = evidenceContentReady(ev);
+  const bodyText = contentReady ? ev.text : '🔒 المحتوى الكامل للدليل ده هيتكشف بعد حل لغز "استرجاع رسالة محذوفة" في تبويب الألغاز.';
+  const links = state.links[ev.id] || {suspect:'', location:'', time:'', motive:''};
+  const modal = el(`<div class="modal">
+    <button class="close-x" type="button">✕</button>
+    <h3>${ev.id} — ${ev.title}</h3>
+    <div style="font-size:11px;color:var(--ink-soft);margin-bottom:6px;">📁 التصنيف: ${ev.cat}</div>
+    <div class="modal-body">${esc(bodyText)}</div>
+
+    <label class="field-label">📌 حالة الدليل (تقييم فريقكم)</label>
+    <select id="statusSel">
+      ${Object.keys(STATUS_LABELS).map(k=>`<option value="${k}" ${((state.status[ev.id]||'unreviewed')===k)?'selected':''}>${STATUS_LABELS[k]}</option>`).join('')}
+    </select>
+
+    <div class="tagform">
+      <div style="font-weight:800;font-size:12.5px;">🔗 روابط الفريق (تخمين وتحليل الفريق — مش معلومة مؤكدة من الملف)</div>
+      <label>مشتبه به</label>
+      <select id="linkSuspect"><option value="">بدون</option>${SUSPECTS.map(s=>`<option value="${s.id}" ${links.suspect===s.id?'selected':''}>${s.name}</option>`).join('')}</select>
+      <label>مكان</label>
+      <select id="linkLoc"><option value="">بدون</option>${LOCATIONS.map(s=>`<option value="${s.id}" ${links.location===s.id?'selected':''}>${s.name}</option>`).join('')}</select>
+      <label>وقت</label>
+      <select id="linkTime"><option value="">بدون</option>${TIMELINE_SLOTS.map(s=>`<option value="${s.id}" ${links.time===s.id?'selected':''}>${s.label}</option>`).join('')}</select>
+      <label>دافع محتمل</label>
+      <select id="linkMotive"><option value="">بدون</option>${MOTIVES.map(s=>`<option value="${s.id}" ${links.motive===s.id?'selected':''}>${s.name}</option>`).join('')}</select>
+      <button class="btn small" id="saveLink" style="margin-top:8px;">💾 حفظ الربط</button>
+    </div>
+  </div>`);
+  overlay.appendChild(modal);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay){ state.modal=null; render(); } });
+  modal.querySelector('.close-x').onclick = ()=>{ state.modal=null; render(); };
+  modal.querySelector('#statusSel').onchange = (e)=>{ state.status[ev.id]=e.target.value; persist(); };
+  modal.querySelector('#saveLink').onclick = ()=>{
+    state.links[ev.id] = {
+      suspect: modal.querySelector('#linkSuspect').value,
+      location: modal.querySelector('#linkLoc').value,
+      time: modal.querySelector('#linkTime').value,
+      motive: modal.querySelector('#linkMotive').value,
+    };
+    persist(); render();
+  };
+  return overlay;
+}
+
+/* =========================================================================
+   SECTION 9: PUZZLES HUB TAB
+   ========================================================================= */
+function puzzleCardShell(pid, unlocked, innerHtml){
+  const meta = PUZZLES[pid];
+  const card = el(`<div class="puzzle-card ${unlocked?'':'locked'}">
+    <span class="ptag" style="background:${meta.color}">${meta.type}</span>
+    <b>${meta.title}</b> ${solved(pid)?'✅':''}
+  </div>`);
+  if(!unlocked){
+    card.appendChild(el(`<div class="locked-card" style="margin-top:8px;">🔒 هيتفتح بعد تقدّم أكتر في التحقيق.</div>`));
+    return card;
+  }
+  card.appendChild(el(`<div>${innerHtml}</div>`));
+  return card;
+}
+
+function renderHintBar(pid){
+  const bar = el(`<div class="hintbar"></div>`);
+  [1,2,3].forEach(level=>{
+    const key = pid+'_h'+level;
+    const cost = level===1?5:(level===2?10:20);
+    const used = state.hintsUsed[key];
+    const btn = el(`<button class="hint-btn" type="button">💡 تلميح ${level} (-${cost})</button>`);
+    btn.onclick = ()=>useHint(pid, level);
+    bar.appendChild(btn);
+    if(used){ bar.appendChild(el(`<div class="hint-text" style="flex-basis:100%;">${esc(PUZZLES[pid].hints[level-1])}</div>`)); }
+  });
+  return bar;
+}
+
+function renderPuzzlesHub(){
+  const w = el(`<div><h2 class="stage-title">الألغاز</h2><div class="stage-sub">بعض الألغاز مفتوحة من البداية، وبعضها بيفتح بعد تقدّمكم</div></div>`);
+
+  // P1 cipher
+  w.appendChild(puzzleCardShell('P1', true, `
+    <div class="cluebox">استخدموا الجدول: كل رقم يقابله حرف حسب ترتيبه في الأبجدية العربية (28 حرف) — بس فيه إزاحة. اطرحوا 2 من كل رقم قبل ما تدوروا على الحرف (لو الناتج صفر أو سالب ضيفوا 28).</div>
+    <div class="legend">${['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'].map((c,i)=>`<div>${c}<span>${i+1}</span></div>`).join('')}</div>
+    <div class="code-seq">20-3-10-25 / 4-2-24-10-4 / 20-25-2-27-3</div>
+    <label class="field-label">اكتبوا الجملة اللي فكيتوها</label>
+    <input type="text" id="p1input" placeholder="اكتبوا هنا...">
+    <button class="btn" id="p1check" ${solved('P1')?'disabled':''}>تأكيد الحل</button>
+    <div id="p1fb"></div>
+  `));
+  const p1card = w.lastElementChild;
+  if(!solved('P1')){
+    p1card.appendChild(renderHintBar('P1'));
+    p1card.querySelector('#p1check').onclick = ()=>{
+      const val = p1card.querySelector('#p1input').value.trim().replace(/\s+/g,'');
+      const fb = p1card.querySelector('#p1fb');
+      if(val === 'عادلبيكدبعلينا'){
+        solvePuzzle('P1');
+        fb.innerHTML = `<div class="feedback ok">📝 صح! "عادل بيكدب علينا" — كريم نفسه كان شاكك في عادل. الدليل ده بيتفتح جوه غرفة الأدلة (E36).</div>`;
+        setTimeout(render, 1200);
+      } else { wrongAttempt(); fb.innerHTML = `<div class="feedback bad">مش لسه صح (-5 نقط). راجعوا خطوة الطرح والترتيب الدائري.</div>`; setTimeout(render,1800); }
+    };
+  }
+
+  // P2 logic
+  w.appendChild(puzzleCardShell('P2', true, `
+    <div class="cluebox">راجعوا: سجل كاميرا البوابة (E01)، سجل اللاسلكي (E06)، جدول الجولة (E07)، سجل بطاقات الدخول (E05).</div>
+    <div class="storybox">عادل عنده تلات أدلة مستقلة بتأكد إنه فضل برّه الفيلا طول الوقت. سيد كان بره في الجنينة (لاسلكي + جدول جولة). سلمى في البيت (بالتحقق من سجل مكالماتها في غرفة الأدلة). ياسمين مكانها بقى مؤكد برسائل الواتساب وتصحيح توقيت الكاميرا. فاضل شخص واحد بس، عربيته خرجت من البوابة الساعة 6:10 مساءً بس مفيش دليل رسمي يأكد إنه فضل برّه بعد كده.</div>
+    <label class="field-label">مين ده؟</label>
+    <div class="choice-grid" id="p2choices"></div>
+    <button class="btn" id="p2check" disabled ${solved('P2')?'style="display:none;"':''}>تأكيد الحل</button>
+    <div id="p2fb"></div>
+  `));
+  const p2card = w.lastElementChild;
+  if(!solved('P2')){
+    const grid = p2card.querySelector('#p2choices'); let picked=null;
+    SUSPECTS.forEach(s=>{
+      const b = el(`<button class="choice-btn" type="button">${s.name}</button>`);
+      b.onclick = ()=>{ grid.querySelectorAll('.choice-btn').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); picked=s.id; p2card.querySelector('#p2check').disabled=false; };
+      grid.appendChild(b);
+    });
+    p2card.appendChild(renderHintBar('P2'));
+    p2card.querySelector('#p2check').onclick = ()=>{
+      const fb = p2card.querySelector('#p2fb');
+      if(picked==='hossam'){ solvePuzzle('P2'); fb.innerHTML=`<div class="feedback ok">🕵️ صح! حسام هو الوحيد اللي مكانه مش مؤكد رسميًا بعد 11:15 — خروجه المسجل الوحيد كان الساعة 6:10 مساءً.</div>`; setTimeout(render,1200); }
+      else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">مش هي دي (-5 نقط). راجعوا كل شاهد على حدة مقابل دليل رسمي.</div>`; setTimeout(render,1800); }
+    };
+  }
+
+  // P3 floor plan
+  w.appendChild(puzzleCardShell('P3', true, `
+    <div class="cluebox">راجعوا مخطط الفيلا (E35). أنهي مسار في الفيلا كلها من غير كاميرا ولا بطاقة دخول؟</div>
+    <div class="choice-grid" id="p3choices"></div>
+    <button class="btn" id="p3check" disabled ${solved('P3')?'style="display:none;"':''}>تأكيد الحل</button>
+    <div id="p3fb"></div>
+  `));
+  const p3card = w.lastElementChild;
+  if(!solved('P3')){
+    const opts = [
+      {id:'a', t:'المدخل الرئيسي'}, {id:'b', t:'الباب الخلفي جنب المطبخ'},
+      {id:'c', t:'الممر الداخلي بين المكتب والمكتبة'}, {id:'d', t:'تراس الجنينة بين المكتب والمكتبة'}, {id:'e', t:'شباك غرفة النوم'},
+    ];
+    const grid = p3card.querySelector('#p3choices'); let picked=null;
+    opts.forEach(o=>{
+      const b = el(`<button class="choice-btn" type="button">${o.t}</button>`);
+      b.onclick=()=>{ grid.querySelectorAll('.choice-btn').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); picked=o.id; p3card.querySelector('#p3check').disabled=false; };
+      grid.appendChild(b);
+    });
+    p3card.appendChild(renderHintBar('P3'));
+    p3card.querySelector('#p3check').onclick = ()=>{
+      const fb = p3card.querySelector('#p3fb');
+      if(picked==='d'){ solvePuzzle('P3'); fb.innerHTML=`<div class="feedback ok">🏠 صح! تراس الجنينة هو المسار الوحيد المفتوح تمامًا.</div>`; setTimeout(render,1200); }
+      else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">مش هو ده (-5 نقط). ركزوا على الرموز في المخطط.</div>`; setTimeout(render,1800); }
+    };
+  }
+
+  // P8 liar (kept early, always available)
+  w.appendChild(puzzleCardShell('P8', true, `
+    <div class="storybox">
+سلمى: "كنت نايمة من الساعة عشرة."<br>
+عادل: "مشيت من الفيلا الساعة تسعة بالليل، قبل ما يحصل أي حاجة."<br>
+ياسمين: "كنت في المكتبة لحد حوالي 11:30، وبعدين رحت بيتي على طول."<br>
+حسام: "اتخانقت مع كريم الساعة 6 العصر، وبعدها مشيت على طول."<br>
+سيد: "كنت باعمل جولة حراسة من 10 ونص لحد 12."
+    </div>
+    <label class="field-label">مين قال كلام بيتعارض مباشرة مع سجل كاميرا البوابة؟</label>
+    <div class="choice-grid" id="p8choices"></div>
+    <button class="btn" id="p8check" disabled ${solved('P8')?'style="display:none;"':''}>تأكيد الحل</button>
+    <div id="p8fb"></div>
+  `));
+  const p8card = w.lastElementChild;
+  if(!solved('P8')){
+    const grid = p8card.querySelector('#p8choices'); let picked=null;
+    SUSPECTS.forEach(s=>{
+      const b = el(`<button class="choice-btn" type="button">${s.name}</button>`);
+      b.onclick=()=>{ grid.querySelectorAll('.choice-btn').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); picked=s.id; p8card.querySelector('#p8check').disabled=false; };
+      grid.appendChild(b);
+    });
+    p8card.appendChild(renderHintBar('P8'));
+    p8card.querySelector('#p8check').onclick = ()=>{
+      const fb = p8card.querySelector('#p8fb');
+      if(picked==='adel'){ solvePuzzle('P8'); fb.innerHTML=`<div class="feedback ok">🕵️ صح! عادل قال 9، لكن الكاميرا سجلت خروجه الساعة 10 بالظبط.</div>`; setTimeout(render,1200); }
+      else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">مش هو ده بالظبط (-5 نقط). قارنوا كل وقت مذكور بسجل الكاميرا.</div>`; setTimeout(render,1800); }
+    };
+  }
+
+  if(!room2Unlocked()){
+    w.appendChild(el(`<div class="locked-card">🔒 باقي الألغاز (٤ – ١٠) والخط الزمني الكامل هيتفتحوا بعد ما تحلّوا لغزين على الأقل من اللي فوق.</div>`));
+    return w;
+  }
+
+  // P5 financial
+  w.appendChild(puzzleCardShell('P5', true, `
+    <div class="stage-sub">أي أدلة بتثبت إن عادل نفسه ماقدرش يعمل التحويل المالي بإيده؟</div>
+    <div id="p5checks"></div>
+    <button class="btn" id="p5check2" ${solved('P5')?'style="display:none;"':''}>تأكيد الحل</button>
+    <div id="p5fb"></div>
+  `));
+  const p5card = w.lastElementChild;
+  if(!solved('P5')){
+    const opts = [
+      {id:'E20', t:'سجل تحديد موقع تليفون عادل (GPS)'}, {id:'E21', t:'فاتورة مطعم باسم عادل'},
+      {id:'E22', t:'سجل GPS عربية عادل'}, {id:'E19', t:'سجل التحويل المالي نفسه'}, {id:'E29', t:'أقوال عادل في التحقيق'},
+    ];
+    const box = p5card.querySelector('#p5checks'); const picks=new Set();
+    opts.forEach(o=>{
+      const row = el(`<label class="check-row"><input type="checkbox"> ${o.t}</label>`);
+      row.querySelector('input').onchange = (e)=>{ if(e.target.checked) picks.add(o.id); else picks.delete(o.id); };
+      box.appendChild(row);
+    });
+    p5card.appendChild(renderHintBar('P5'));
+    p5card.querySelector('#p5check2').onclick = ()=>{
+      const fb = p5card.querySelector('#p5fb');
+      const good = ['E20','E21','E22'];
+      const ok = [...picks].every(p=>good.includes(p)) && [...picks].filter(p=>good.includes(p)).length>=2;
+      if(ok){ solvePuzzle('P5'); fb.innerHTML=`<div class="feedback ok">💰 صح! أدلة الموقع والفاتورة وGPS العربية بتثبت إن عادل كان بره الفيلا وقت التحويل — يبقى حد تاني استخدم دخوله.</div>`; setTimeout(render,1200); }
+      else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">لسه مش دقيق (-5 نقط). اختاروا بس الأدلة اللي بتثبت مكان عادل الفعلي، من غير سجل التحويل أو أقواله.</div>`; setTimeout(render,1800); }
+    };
+  }
+
+  // P6 hidden info combine
+  w.appendChild(puzzleCardShell('P6', true, `
+    <div class="stage-sub">اختاروا القطعتين اللي لازم تتحطوا مع بعض عشان تكتمل رسالة واحدة</div>
+    <div id="p6checks"></div>
+    <button class="btn" id="p6check2" ${solved('P6')?'style="display:none;"':''}>دمج القطعتين</button>
+    <div id="p6fb"></div>
+  `));
+  const p6card = w.lastElementChild;
+  if(!solved('P6')){
+    const opts = [
+      {id:'E09', t:'قصاصة أمر صيانة — النص الأول'}, {id:'E10', t:'قصاصة أمر صيانة — النص الثاني'},
+      {id:'E13', t:'صور مسرح الجريمة'}, {id:'E24', t:'مفكرة كريم'},
+    ];
+    const box = p6card.querySelector('#p6checks'); const picks=new Set();
+    opts.forEach(o=>{
+      const row = el(`<label class="check-row"><input type="checkbox"> ${o.t}</label>`);
+      row.querySelector('input').onchange=(e)=>{ if(e.target.checked) picks.add(o.id); else picks.delete(o.id); };
+      box.appendChild(row);
+    });
+    p6card.appendChild(renderHintBar('P6'));
+    p6card.querySelector('#p6check2').onclick = ()=>{
+      const fb = p6card.querySelector('#p6fb');
+      if(picks.size===2 && picks.has('E09') && picks.has('E10')){
+        solvePuzzle('P6');
+        fb.innerHTML = `<div class="feedback ok">📎 اكتملت الرسالة: "كاميرا الممر الداخلي جنب المكتب متأخرة 32 دقيقة عن الوقت الحقيقي بسبب انقطاع كهرباء الأسبوع اللي فات." احفظوا الرقم ده!</div>`;
+        setTimeout(render,1400);
+      } else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">دي مش القطعتين الصح (-5 نقط).</div>`; setTimeout(render,1800); }
+    };
+  }
+
+  // P7 numeric
+  w.appendChild(puzzleCardShell('P7', solved('P6'), `
+    <div class="cluebox">لقطة كاميرا الممر الداخلي (E08) مكتوب عليها 10:50 بالليل. بعد ما عرفتوا إن الكاميرا متأخرة 32 دقيقة عن الوقت الحقيقي...</div>
+    <label class="field-label">إيه الوقت الحقيقي؟ (اكتبوه بصيغة الساعة:الدقيقة)</label>
+    <input type="text" id="p7input" placeholder="مثلاً 11:22">
+    <button class="btn" id="p7check" ${solved('P7')?'style="display:none;"':''}>تأكيد الحل</button>
+    <div id="p7fb"></div>
+  `));
+  if(solved('P6')){
+    const p7card = w.lastElementChild;
+    if(!solved('P7')){
+      p7card.appendChild(renderHintBar('P7'));
+      p7card.querySelector('#p7check').onclick = ()=>{
+        const digits = p7card.querySelector('#p7input').value.replace(/\D/g,'');
+        const fb = p7card.querySelector('#p7fb');
+        if(digits==='1122'||digits==='2322'){ solvePuzzle('P7'); fb.innerHTML=`<div class="feedback ok">🔢 صح! 10:50 + 32 دقيقة = 11:22 بالليل. الشبح في الكاميرا كان متحرك ناحية المكتب في نفس وقت رسالة كريم.</div>`; setTimeout(render,1200); }
+        else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">مش صح (-5 نقط). 10:50 + 32 دقيقة = ؟</div>`; setTimeout(render,1800); }
+      };
+    }
+  }
+
+  // P4 phone message
+  w.appendChild(puzzleCardShell('P4', true, `
+    <div class="stage-sub">استرجاع فني لرسالة محذوفة من تليفون ياسمين — رتّبوا القطع بالترتيب الصح</div>
+    <div class="frag-line" id="p4line"></div>
+    <div id="p4frags"></div>
+    <button class="btn secondary small" id="p4reset" type="button">مسح</button>
+    <button class="btn" id="p4check" ${solved('P4')?'style="display:none;"':''}>تأكيد الحل</button>
+    <div id="p4fb"></div>
+  `));
+  const p4card = w.lastElementChild;
+  if(!solved('P4')){
+    const parts = ['لو حد','عرف','بالموضوع','أنا','خلصت'];
+    let order = [...parts].sort(()=>Math.random()-0.5);
+    let built = [];
+    const line = p4card.querySelector('#p4line');
+    const fragsBox = p4card.querySelector('#p4frags');
+    function drawFrags(){
+      fragsBox.innerHTML='';
+      order.forEach((p,i)=>{
+        const b = el(`<button type="button" class="frag-btn ${built.includes(i)?'used':''}">${p}</button>`);
+        b.onclick = ()=>{ if(!built.includes(i)){ built.push(i); line.textContent = built.map(idx=>order[idx]).join(' '); drawFrags(); } };
+        fragsBox.appendChild(b);
+      });
+    }
+    drawFrags();
+    p4card.querySelector('#p4reset').onclick = ()=>{ built=[]; line.textContent=''; drawFrags(); };
+    p4card.appendChild(renderHintBar('P4'));
+    p4card.querySelector('#p4check').onclick = ()=>{
+      const fb = p4card.querySelector('#p4fb');
+      const finalText = built.map(idx=>order[idx]).join(' ');
+      if(finalText === 'لو حد عرف بالموضوع أنا خلصت'){ solvePuzzle('P4'); fb.innerHTML=`<div class="feedback ok">📱 اتسترجعت الرسالة! "لو حد عرف بالموضوع أنا خلصت" — مبعوتة من ياسمين الساعة 2 الضهر، قبل الجريمة بساعات.</div>`; setTimeout(render,1400); }
+      else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">الترتيب لسه مش صح (-5 نقط).</div>`; setTimeout(render,1800); }
+    };
+  }
+
+  // P9 cross-reference
+  w.appendChild(puzzleCardShell('P9', true, `
+    <div class="stage-sub">أنهي مجموعة أدلة بتأكد هوية صاحب الجاكيت اللي عالق منه خيط عند باب التراس؟</div>
+    <div id="p9checks"></div>
+    <button class="btn" id="p9check2" ${solved('P9')?'style="display:none;"':''}>تأكيد الحل</button>
+    <div id="p9fb"></div>
+  `));
+  const p9card = w.lastElementChild;
+  if(!solved('P9')){
+    const opts = [
+      {id:'E14', t:'تقرير البصمات على التمثال'}, {id:'E15', t:'أثر القدم الموحل'},
+      {id:'E16', t:'خيط القماش عند باب التراس'}, {id:'E17', t:'إيصال شراء الجاكيت'}, {id:'E18', t:'صورة من حفلة الموظفين'},
+    ];
+    const box = p9card.querySelector('#p9checks'); const picks=new Set();
+    opts.forEach(o=>{
+      const row = el(`<label class="check-row"><input type="checkbox"> ${o.t}</label>`);
+      row.querySelector('input').onchange=(e)=>{ if(e.target.checked) picks.add(o.id); else picks.delete(o.id); };
+      box.appendChild(row);
+    });
+    p9card.appendChild(renderHintBar('P9'));
+    p9card.querySelector('#p9check2').onclick = ()=>{
+      const fb = p9card.querySelector('#p9fb');
+      const need = ['E16','E17','E18'];
+      const ok = need.every(n=>picks.has(n)) && !picks.has('E15');
+      if(ok){ solvePuzzle('P9'); fb.innerHTML=`<div class="feedback ok">🧵 صح! الخيط + الإيصال + الصورة بيأكدوا إن الجاكيت بتاع حسام.</div>`; setTimeout(render,1200); }
+      else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">لسه مش دقيق (-5 نقط). أثر القدم غامض لوحده، سيبوه برّه.</div>`; setTimeout(render,1800); }
+    };
+  }
+
+  // P10 interrogation confrontation
+  w.appendChild(puzzleCardShell('P10', solved('P7') && solved('P4') && solved('P9'), `
+    <div class="stage-sub">جمعتوا كفاية عشان تواجهوا ياسمين. هتواجهوها بإيه عشان تتلخبط فعلًا؟</div>
+    <div class="choice-grid" id="p10choices"></div>
+    <button class="btn" id="p10check" disabled ${solved('P10')?'style="display:none;"':''}>تأكيد الاختيار</button>
+    <div id="p10fb"></div>
+  `));
+  if(solved('P7') && solved('P4') && solved('P9')){
+    const p10card = w.lastElementChild;
+    if(!solved('P10')){
+      const opts = [
+        {id:'a', t:'واجهوها بسجل التحويل المالي الـ250 ألف جنيه'},
+        {id:'b', t:'واجهوها برسالة كريم ليها الساعة 11:15 والوقت المصحح لكاميرا الممر (11:22)'},
+        {id:'c', t:'واجهوها بالبصمة المطموسة على التمثال بس'},
+        {id:'d', t:'اسألوها سؤال عام عن الجنينة من غير أي دليل محدد'},
+      ];
+      const grid = p10card.querySelector('#p10choices'); let picked=null;
+      opts.forEach(o=>{
+        const b = el(`<button class="choice-btn" type="button">${o.t}</button>`);
+        b.onclick=()=>{ grid.querySelectorAll('.choice-btn').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); picked=o.id; p10card.querySelector('#p10check').disabled=false; };
+        grid.appendChild(b);
+      });
+      p10card.appendChild(renderHintBar('P10'));
+      p10card.querySelector('#p10check').onclick = ()=>{
+        const fb = p10card.querySelector('#p10fb');
+        if(picked==='b'){
+          solvePuzzle('P10');
+          fb.innerHTML = `<div class="feedback ok">🎯 اتلخبطت ياسمين واعترفت إنها راحت المكتب فعلًا وخانقت كريم على الأرقام — بس بتأكد إنها مشيت "بعد دقايق بس" وسابته حي، وطلعت من البوابة متأخر لأنها قعدت في عربيتها تعيط قبل ما تمشي. ده بيضيق نافذة الجريمة أكتر ويفتح احتمال إن حد تاني دخل بعدها بلحظات.</div>`;
+          setTimeout(render,1600);
+        } else { wrongAttempt(); fb.innerHTML=`<div class="feedback bad">مقنعتش (-5 نقط). دوروا على المواجهة اللي بتربط وقت واضح بمكان واضح.</div>`; setTimeout(render,1800); }
+      };
+    }
+  }
+
+  // P11 timeline reconstruction
+  w.appendChild(el(`<div><h2 class="stage-title" style="margin-top:22px;">إعادة بناء الخط الزمني الكامل</h2><div class="stage-sub">حددوا إيه اللي حصل في كل وقت من الأوقات العشرة</div></div>`));
+  const tlCard = el(`<div class="puzzle-card"></div>`);
+  TIMELINE_SLOTS.forEach(slot=>{
+    const row = el(`<div class="tl-row"><div class="tl-time">${slot.label}</div><select data-slot="${slot.id}"><option value="">اختاروا الحدث...</option></select></div>`);
+    const sel = row.querySelector('select');
+    [...TIMELINE_EVENTS].forEach(evt=>{
+      const opt = document.createElement('option'); opt.value=evt.id; opt.textContent=evt.text;
+      if(state.timelinePicks[slot.id]===evt.id) opt.selected=true;
+      sel.appendChild(opt);
+    });
+    sel.onchange = (e)=>{ state.timelinePicks[slot.id]=e.target.value; persist(); };
+    tlCard.appendChild(row);
+  });
+  const tlBtn = el(`<button class="btn" style="width:100%;">تأكيد الترتيب الكامل</button>`);
+  const tlFb = el(`<div id="tlfb"></div>`);
+  tlCard.appendChild(tlBtn); tlCard.appendChild(tlFb);
+  tlBtn.onclick = ()=>{
+    let correct=0;
+    TIMELINE_SLOTS.forEach(slot=>{
+      const evt = TIMELINE_EVENTS.find(e=>e.id===state.timelinePicks[slot.id]);
+      if(evt && evt.slot===slot.id) correct++;
+    });
+    if(correct===10){ solvePuzzle('P11'); tlFb.innerHTML = `<div class="feedback ok">🗓️ الخط الزمني كامل وصحيح! 10 من 10.</div>`; }
+    else { wrongAttempt(); tlFb.innerHTML = `<div class="feedback bad">${correct} من 10 صح بس (-5 نقط). راجعوا التوقيتات المؤكدة من الأدلة (كاميرا، رسائل، لاسلكي).</div>`; }
+    setTimeout(render, correct===10?1400:1800);
+  };
+  w.appendChild(tlCard);
+
+  return w;
+}
+
+/* =========================================================================
+   SECTION 10: CASE BOARD TAB
+   ========================================================================= */
+function renderCaseBoard(){
+  const w = el(`<div>
+    <h2 class="stage-title">لوحة القضية</h2>
+    <div class="stage-sub">ملخص كل الروابط اللي عملتوها من غرفة الأدلة، مقسّمة على كل مشتبه به</div>
+  </div>`);
+  SUSPECTS.forEach(s=>{
+    const linkedEv = Object.entries(state.links).filter(([id,l])=>l && l.suspect===s.id);
+    const box = el(`<div class="board-suspect"><b>${s.name}</b> — ${s.role}
+      <div class="links">${linkedEv.length? linkedEv.map(([id])=>`🔗 ${id} — ${evById(id)?evById(id).title:''}`).join('<br>') : 'مفيش أدلة مربوطة بيه/بيها لسه.'}</div>
+    </div>`);
+    w.appendChild(box);
+  });
+
+  const p11ok = solved('P11');
+  const timelineFilled = TIMELINE_SLOTS.filter(s=>state.timelinePicks[s.id]).length;
+  const readyText = `التقدّم: الألغاز الأساسية (٩، ١٠، الخط الزمني): ${['P9','P10'].filter(solved).length}/2 + ${p11ok?'✅':'❌'} الخط الزمني الكامل.`;
+
+  const board = el(`<div class="board-check">
+    <div>${readyText}</div>
+    <div style="margin-top:8px;">عشان تفتحوا الاتهام النهائي، لازم: تحلّوا الألغاز ٩ و١٠ والخط الزمني الكامل، وتربطوا 3 أدلة على الأقل بمشتبه به واحد على اللوحة دي.</div>
+    <button class="btn" id="checkReady" style="margin-top:10px;">🔎 تحقق من جاهزية اللوحة</button>
+    <div id="readyFb"></div>
+  </div>`);
+  w.appendChild(board);
+  board.querySelector('#checkReady').onclick = ()=>{
+    const fb = board.querySelector('#readyFb');
+    const maxLinksToOne = Math.max(0, ...SUSPECTS.map(s=>Object.values(state.links).filter(l=>l&&l.suspect===s.id).length));
+    const puzzlesOk = solved('P9') && solved('P10') && solved('P11');
+    if(puzzlesOk && maxLinksToOne>=3){
+      state.boardReady = true; persist(); pushScore();
+      fb.innerHTML = `<div class="feedback ok">✅ اللوحة جاهزة! اتفتح تبويب "الاتهام النهائي".</div>`;
+      setTimeout(render, 1400);
+    } else {
+      state.score -= 5; persist(); pushScore();
+      fb.innerHTML = `<div class="feedback bad">لسه مش جاهزة (-5 نقط). ${!puzzlesOk?'كمّلوا حل ألغاز ٩ و١٠ والخط الزمني الكامل. ':''}${maxLinksToOne<3?'اربطوا 3 أدلة على الأقل بمشتبه به واحد من غرفة الأدلة.':''}</div>`;
+      setTimeout(render, 1800);
+    }
+  };
+  return w;
+}
+
+/* =========================================================================
+   SECTION 11: FINAL ACCUSATION TAB
+   ========================================================================= */
+function keywordScore(text){
+  const KEY_TERMS = ['ياسمين','تمثال','مكتب','اختلاس','تراس','رسالة','بصمة','عادل','قميص','كاميرا','11:31','23:31'];
+  const t = (text||'');
+  let hits = KEY_TERMS.filter(k=>t.includes(k)).length;
+  let score = Math.min(16, hits*2);
+  if(t.trim().length>40) score += 4;
+  return {hits, score};
+}
+function computeFinalScore(picks){
+  const checks = [['suspect','yasmine'],['weapon','statue'],['location','office'],['motive','money'],['time','t2331'],['entry','c_terrace'],['misleading','yasmine']];
+  const flags = {}; let correctCount=0;
+  checks.forEach(([f,val])=>{ const ok = picks[f]===val; flags[f]=ok; if(ok) correctCount++; });
+  const proofPicks = picks.evidence||[];
+  const proofCorrect = proofPicks.filter(id=>PROOF_POOL.includes(id)).length;
+  const proofScore = Math.min(9, proofCorrect*3);
+  const rhOk = RED_HERRING_POOL.includes(picks.redHerring);
+  const kw = keywordScore(picks.explanation);
+  const objectiveScore = correctCount*6;
+  const solvedCase = flags.suspect && flags.weapon && flags.location && flags.motive;
+  let totalDelta = objectiveScore + proofScore + (rhOk?5:0) + kw.score;
+  if(solvedCase) totalDelta += 20;
+  if(!flags.suspect) totalDelta -= 25;
+  return {flags, correctCount, proofCorrect, rhOk, kw, totalDelta, solvedCase};
+}
+
+function renderFinalTab(){
+  if(!state.boardReady){
+    return el(`<div><h2 class="stage-title">الاتهام النهائي</h2><div class="locked-card">🔒 لسه اللوحة مش جاهزة. روحوا تبويب "لوحة القضية" وحققوا الشروط المطلوبة الأول.</div></div>`);
+  }
+  if(state.finalSubmitted){ return renderDebrief(); }
+  const w = el(`<div>
+    <h2 class="stage-title">الاتهام النهائي</h2>
+    <div class="stage-sub">جمعتوا كل حاجة. دلوقتي اكتبوا نظريتكم كاملة بالتفصيل</div>
+
+    <div class="final-field"><label class="field-label">1) 👤 مين الجاني؟</label>
+      <select id="fSuspect"><option value="">اختاروا...</option>${SUSPECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+
+    <div class="final-field"><label class="field-label">2) 🔪 إيه سلاح الجريمة؟</label>
+      <select id="fWeapon"><option value="">اختاروا...</option>${WEAPONS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+
+    <div class="final-field"><label class="field-label">3) 📍 فين حصلت الجريمة؟</label>
+      <select id="fLocation"><option value="">اختاروا...</option>${LOCATIONS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+
+    <div class="final-field"><label class="field-label">4) 🎯 إيه الدافع؟</label>
+      <select id="fMotive"><option value="">اختاروا...</option>${MOTIVES.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+
+    <div class="final-field"><label class="field-label">5) 🕒 إمتى حصلت الجريمة تقريبًا؟</label>
+      <select id="fTime"><option value="">اختاروا...</option>${TIME_OPTIONS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+
+    <div class="final-field"><label class="field-label">6) 🚪 إزاي الجاني دخل وخرج؟</label>
+      <select id="fEntry"><option value="">اختاروا...</option>${ENTRY_OPTIONS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+
+    <div class="final-field"><label class="field-label">7) 📎 اختاروا 3 أدلة بتثبت نظريتكم</label>
+      <div id="fEvidence"></div></div>
+
+    <div class="final-field"><label class="field-label">8) 🗣️ أقوال مين كانت مضللة عن قصد؟</label>
+      <select id="fMisleading"><option value="">اختاروا...</option>${SUSPECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+
+    <div class="final-field"><label class="field-label">9) 🎭 إيه الدليل اللي طلع أثر تضليل (Red Herring)؟</label>
+      <select id="fRedHerring"><option value="">اختاروا...</option>${EVIDENCE.map(e=>`<option value="${e.id}">${e.id} — ${e.title}</option>`).join('')}</select></div>
+
+    <div class="final-field"><label class="field-label">10) ✍️ اكتبوا تفسيركم الكامل للأحداث</label>
+      <textarea id="fExplain" placeholder="مين عمل إيه، إمتى، وليه..."></textarea></div>
+
+    <button class="btn" id="finalSubmit" style="width:100%;">🚔 قدّموا الاتهام النهائي</button>
+  </div>`);
+  const evBox = w.querySelector('#fEvidence');
+  EVIDENCE.filter(evidenceUnlocked).forEach(e=>{
+    const row = el(`<label class="check-row"><input type="checkbox" value="${e.id}"> ${e.id} — ${e.title}</label>`);
+    evBox.appendChild(row);
+  });
+  w.querySelector('#finalSubmit').onclick = ()=>{
+    const picks = {
+      suspect: w.querySelector('#fSuspect').value, weapon: w.querySelector('#fWeapon').value,
+      location: w.querySelector('#fLocation').value, motive: w.querySelector('#fMotive').value,
+      time: w.querySelector('#fTime').value, entry: w.querySelector('#fEntry').value,
+      misleading: w.querySelector('#fMisleading').value, redHerring: w.querySelector('#fRedHerring').value,
+      explanation: w.querySelector('#fExplain').value,
+      evidence: [...evBox.querySelectorAll('input:checked')].map(i=>i.value),
+    };
+    if(!picks.suspect||!picks.weapon||!picks.location||!picks.motive||!picks.time||!picks.entry||!picks.misleading||!picks.redHerring||picks.evidence.length!==3||!picks.explanation.trim()){
+      alert('لازم تملّوا كل الحقول، وتختاروا 3 أدلة بالظبط، قبل تقديم الاتهام.');
+      return;
+    }
+    if(!confirm('متأكدين إنكم عايزين تقدّموا الاتهام؟ مفيش رجوع بعد كده لتعديل نفس المحاولة.')) return;
+    const result = computeFinalScore(picks);
+    state.score += result.totalDelta;
+    state.finalSubmitted = true; state.finalPicks = picks; state.finalResult = result;
+    persist(); pushScore(); render();
+  };
+  return w;
+}
+
+function renderDebrief(){
+  const r = state.finalResult, p = state.finalPicks;
+  const solvedCase = r.solvedCase;
+  const title = solvedCase ? '🎉 القضية اتحلّت رسميًا!' : (r.correctCount>=4 ? '👏 قريبين جدًا من الحقيقة' : '🤔 النظرية محتاجة مراجعة');
+  const w = el(`<div class="final-result">
+    <h2 class="stage-title" style="margin:0 auto 6px;">${title}</h2>
+    <div class="storybox" style="text-align:right;">
+      اتهامكم: <b>${nameOf(SUSPECTS,p.suspect)}</b> — ${nameOf(WEAPONS,p.weapon)} — ${nameOf(LOCATIONS,p.location)} — ${nameOf(MOTIVES,p.motive)}<br>
+      عناصر موضوعية صح: ${r.correctCount} من 7 · نقاط الأدلة الداعمة: ${r.proofCorrect} من 3 صحيحة · تفسير مكتوب: ${r.kw.hits} كلمة مفتاحية
+    </div>
+    <div class="score-pill" style="display:inline-block;font-size:17px;">⭐ رصيدكم النهائي: ${state.score} نقطة</div>
+
+    <div class="debrief">
+      <h4>✅ الحل الكامل</h4>
+      <p style="line-height:1.9;">الجاني هو <b>حسام الفار</b>، الأخ الأصغر. ضرب كريم الفار بـ<b>تمثال رخامي</b> كان على رف مكتبه، في <b>المكتب</b>، حوالين الساعة <b>11:31 بالليل</b>. الدافع: حسام كان غرقان في ديون وتحت تهديد مرابي، وكان محتاج سلفة عاجلة من <b>الميراث</b>/فلوس العيلة، وكريم رفض يديله حاجة وهددّه إنه ممكن يشيله من التوزيع. بعد الخناقة النهارية، حسام سايب الفيلا بعربيته الساعة 6:10 مساءً (زي ما أكدت كاميرا البوابة)، لكنه رجع تاني في الخفاء بالليل وقعد مستني في الجنينة. لما ياسمين اتخانقت مع كريم وخرجت من المكتب مضايقة الساعة 11:30 تقريبًا، دخل حسام من نفس اللحظة عن طريق <b>تراس الجنينة</b> اللي بيوصل مباشرة بين المكتبة والمكتب — المسار الوحيد في الفيلا من غير كاميرا ولا بطاقة دخول — وواجه كريم؛ الخناقة اتطورت لضربة قاتلة.</p>
+
+      <h4>🗓️ الخط الزمني الحقيقي الكامل</h4>
+      ${TIMELINE_SLOTS.map(slot=>{
+        const evt = TIMELINE_EVENTS.find(e=>e.slot===slot.id);
+        return `<div class="te-row"><div class="te-time">${slot.label}</div><div>${evt?evt.text:''}</div></div>`;
+      }).join('')}
+
+      <h4>🎭 الأدلة المضلّلة ولماذا</h4>
+      ${EVIDENCE.filter(e=>e.cls==='red_herring'||e.cls==='contradiction').map(e=>`<div class="rh-item"><b>${e.id} — ${e.title}</b><br>${esc(e.meaning)}</div>`).join('')}
+
+      <h4>🔑 ليه الأدلة الحرجة كانت مهمة</h4>
+      ${EVIDENCE.filter(e=>e.cls==='critical').slice(0,10).map(e=>`<div class="rh-item" style="background:#eef6ec;"><b>${e.id} — ${e.title}</b><br>${esc(e.meaning)}</div>`).join('')}
+    </div>
+    <button class="btn secondary" id="resubmit" style="margin-top:14px;">✏️ عدّلوا نظريتكم وقدّموها تاني</button>
+  </div>`);
+  w.querySelector('#resubmit').onclick = ()=>{ state.finalSubmitted=false; persist(); render(); };
+  return w;
+}
+
+/* =========================================================================
+   SECTION 12: INIT
+   ========================================================================= */
+render();
+</script>
+</body>
+</html>
